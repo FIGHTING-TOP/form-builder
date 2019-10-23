@@ -1,5 +1,5 @@
 import trigger from './config/trigger';
-import {optionsItems,optionsItemTypes} from "./config/optionsItem";
+import option, {optionItemBtn, formOptions} from "./widgets/optionItem";
 
 export default {
   name: 'options',
@@ -15,7 +15,13 @@ export default {
       h('button', {
         domProps: {
           onclick: () => {
-            let o = this.obj.items.concat([this.obj.items[0]]);
+            let obj = JSON.parse(JSON.stringify(option[0]));
+            let i = 1;
+            this.obj.items.map((v) => {
+              if (v.label_value > i) i = v.label_value
+            });
+            obj.label_value = i + 1;
+            let o = this.obj.items.concat([obj]);
             this.$set(this.obj, 'items', o);
           }
         }
@@ -33,25 +39,37 @@ export default {
       }, ['删除'])
     ];
 
-    // 为单个option添加字段的按钮
-    const optionBtn = [];
-    optionsItemTypes.map((val)=>{
-      return optionBtn.push(h('span',{class:"label_item"},val.btnText))
-    });
 
-    let checkGroup = [
+    let checkGroupItem = [
       h("input", {
         domProps: {
-          type: 'checkbox',
-          checked: this.ele.label_value,
-          onclick(e) {
+          type: this.obj.type,
+          checked: this.hasChecked,
+          onclick: (e) => {
+            if (e.target.checked) {
+              if (this.obj.type === 'radio') {
+                this.obj.value = this.ele.label_value
+              } else {
+                this.obj.value.push(this.ele.label_value)
+              }
+            } else {
+              this.obj.value.splice(this.obj.value.indexOf(this.ele.label_value), 1)
+            }
             console.log(e.target.checked)
+            console.log(this.hasChecked)
           }
         }
       }),
     ];
-    this.ele.label_content.map((it) => {
-      checkGroup.push(optionsItems(it, h, 1))
+    this.ele.label_content.map((it, i) => {
+      checkGroupItem.push(formOptions(it, h, 1));
+      checkGroupItem.push(h('button', {
+        domProps: {
+          onclick: () => {
+            this.ele.label_content.splice(i, 1)
+          }
+        }
+      }, ['删除']))
     });
 
     // 设置该控件标记为显示
@@ -90,27 +108,23 @@ export default {
         h('div', {
             class: 'btnGroup'
           },
-          optionBtn
+          optionItemBtn(this, h)
         ),
-        h("CheckboxGroup", {
-            props: {
-              value: this.obj.value || []
-            },
-            on: {
-              'on-change': (arr) => {
-                if (!this.obj.name) {
-                  return false;
-                }
-                this.obj.value = arr;
-                this.$emit('handleChangeVal', arr)
-              }
-            }
+        h("div", {
+            class: 'option'
           },
-          checkGroup.concat(groupBtn)
+          checkGroupItem.concat(groupBtn)
         )
       ]
     );
-
+  },
+  computed:{
+    hasChecked(){
+      if(this.obj.type==='radio'){
+        return this.obj.value
+      }
+      return this.obj.value&&this.obj.value.indexOf(this.ele.label_value)>=0
+    }
   },
   props: {
     // 当前控件的配置

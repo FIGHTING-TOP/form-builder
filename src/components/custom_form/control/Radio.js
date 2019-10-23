@@ -1,4 +1,4 @@
-import optionsItem from "../config/optionsItem";
+import optionsItem from "../widgets/optionItem";
 
 export default (_self, h) => {
   return [

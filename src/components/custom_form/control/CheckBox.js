@@ -1,4 +1,4 @@
-import optionsItem, {optionsItems} from "../config/optionsItem";
+import optionsItem, {formOptions} from "../widgets/optionItem";
 
 export default (_self, h) => {
   let options = [];
@@ -6,30 +6,24 @@ export default (_self, h) => {
     options.push(h("input", {
       domProps: {
         type: 'checkbox',
-        checked: true,
-        onclick(e) {
+        checked: _self.hasChecked,
+        onclick: (e) => {
+          if (e.target.checked) {
+            _self.obj.value.push(v.label_value)
+          } else {
+            _self.obj.value.splice(_self.obj.value.indexOf(v.label_value), 1)
+          }
           console.log(e.target.checked)
         }
       }
     }))
       v.label_content.map((it) => {
-        options.push(optionsItems(it,h))
+        options.push(formOptions(it,h))
     })
   })
   return [
-    h("CheckboxGroup", {
-      props: {
-        value: _self.obj.value || []
-      },
-      on: {
-        'on-change'(arr) {
-          if (!_self.obj.name) {
-            return false;
-          }
-          _self.obj.value = arr;
-          _self.$emit('handleChangeVal', arr)
-        }
-      }
+    h("div", {
+      class: 'option'
     }, options)
   ];
 };

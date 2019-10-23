@@ -27,8 +27,8 @@
             </transition-group>
           </draggable>
           <FormItem>
-            <Button type="primary" @click="handleSubmit()">Submit</Button>
-            <Button type="ghost" @click="handleReset()" style="margin-left: 8px">Reset</Button>
+            <Button type="primary" @click="handleSubmit()">预览</Button>
+            <Button type="ghost" @click="handleReset()" style="margin-left: 8px">重置</Button>
           </FormItem>
         </Form>
       </i-col>
@@ -113,7 +113,6 @@
 <script>
     import draggable from "vuedraggable";
     import form_list from "./custom_form/FormList";
-    import {optionsItemTypes} from "./custom_form/config/optionsItem";
 
     export default {
         components: {
@@ -122,7 +121,6 @@
         data() {
             return {
                 form_list: form_list,
-                optionsItemTypes: optionsItemTypes,
                 sortable_item: [],
                 showModal: false,
                 // 深拷贝对象，防止默认空对象被更改
