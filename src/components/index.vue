@@ -144,9 +144,10 @@
             removeOption(i){},
             // 克隆表单提交事件
             handleSubmit() {
-                localStorage.setItem('template_form', JSON.stringify(this.sortable_item.filter(v => {
-                    return !!v.obj.name
-                })));
+                // localStorage.setItem('template_form', JSON.stringify(this.sortable_item.filter(v => {
+                //     return !!v.obj.name
+                // })));
+                localStorage.setItem('template_form', JSON.stringify(this.sortable_item));
                 this.$router.push('/render');
             },
             // 清空克隆表单
@@ -183,6 +184,20 @@
             // modal点击确定执行事件
             handleOk() {
                 const index = this.modalFormData.listIndex;
+                let flag;
+                this.modalFormData.items.map((v)=>{
+                    if(flag) return false;
+                    v.label_content.map(item=>{
+                        if(item.type==='property' && !item.value.trim()){
+                            flag = true;
+                            return false;
+                        }
+                    })
+                });
+                if(flag){
+                    alert('选项内容不能为空');
+                    return false
+                }
                 this.sortable_item[index].obj = Object.assign({},
                     this.sortable_item[index].obj,
                     this.modalFormData
