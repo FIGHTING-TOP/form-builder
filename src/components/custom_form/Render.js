@@ -120,6 +120,15 @@ export default {
       );
     }
   },
+  methods:{
+    hasChecked(v){
+      if(this.obj.type==='radio'){
+        return this.obj.value === v
+      }else if(this.obj.type==='checkbox'){
+        return this.obj.value.indexOf(v) >= 0
+      }
+    }
+  },
   props: {
     // 当前控件的类型
     ele: {

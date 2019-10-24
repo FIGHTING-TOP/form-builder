@@ -6,14 +6,13 @@ export default (_self, h) => {
     options.push(h("input", {
       domProps: {
         type: 'checkbox',
-        checked: _self.hasChecked,
+        checked: _self.hasChecked(v.label_value),
         onclick: (e) => {
           if (e.target.checked) {
             _self.obj.value.push(v.label_value)
           } else {
             _self.obj.value.splice(_self.obj.value.indexOf(v.label_value), 1)
           }
-          console.log(e.target.checked)
         }
       }
     }))

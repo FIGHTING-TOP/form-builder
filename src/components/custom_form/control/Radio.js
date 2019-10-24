@@ -1,29 +1,25 @@
-import optionsItem from "../widgets/optionItem";
+import optionsItem, {formOptions} from "../widgets/optionItem";
 
 export default (_self, h) => {
-  return [
-    h("RadioGroup", {
-      props: {
-        value: _self.obj.value || "-1"
-      },
-      on: {
-        'on-change' (value) {
-          if (!_self.obj.name) {
-            return false;
-          }
-          _self.obj = Object.assign(_self.obj, {
-            value
-          });
-          _self.$emit('handleChangeVal', value)
+  let options = [];
+  _self.obj.items.map(v => {
+    options.push(h("input", {
+      domProps: {
+        type: 'radio',
+        checked: _self.hasChecked(v.label_value),
+        onclick: () => {
+          _self.obj.value = v.label_value
         }
       }
-    }, _self.obj.items.map(v => {
-      return h("Radio", {
-        props: {
-          label: v.label_value
-        }
-      }, v.label_name)
     }))
+    v.label_content.map((it) => {
+      options.push(formOptions(it,h))
+    })
+  })
+  return [
+    h("div", {
+      class: 'option'
+    }, options)
   ];
 };
 

@@ -39,12 +39,11 @@ export default {
       }, ['删除'])
     ];
 
-
     let checkGroupItem = [
       h("input", {
         domProps: {
           type: this.obj.type,
-          checked: this.hasChecked,
+          checked: this.hasChecked(),
           onclick: (e) => {
             if (e.target.checked) {
               if (this.obj.type === 'radio') {
@@ -55,8 +54,6 @@ export default {
             } else {
               this.obj.value.splice(this.obj.value.indexOf(this.ele.label_value), 1)
             }
-            console.log(e.target.checked)
-            console.log(this.hasChecked)
           }
         }
       }),
@@ -118,10 +115,10 @@ export default {
       ]
     );
   },
-  computed:{
-    hasChecked(){
+  methods:{
+    hasChecked(v){
       if(this.obj.type==='radio'){
-        return this.obj.value
+        return this.obj.value === this.ele.label_value
       }
       return this.obj.value&&this.obj.value.indexOf(this.ele.label_value)>=0
     }

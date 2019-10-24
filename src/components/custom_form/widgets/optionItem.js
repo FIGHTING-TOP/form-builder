@@ -4,7 +4,7 @@ export default [
     "label_content": [
       {
         type: 'property',
-        value: '',
+        value: '选项内容',
         placeholder: '选项内容'
       }
     ]
