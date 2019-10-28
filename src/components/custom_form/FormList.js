@@ -2,6 +2,7 @@ import { inputConf } from "./control/Input";
 import { radioConf } from "./control/Radio";
 import { checkBoxConf } from "./control/CheckBox";
 import { datePickerConf } from './control/DatePicker';
+import { tableConf } from './control/TableMaker';
 // import { selectConf } from "./control/Select";
 // import { cascaderConf } from "./control/Cascader";
 // import { textConf } from "./control/Text";
@@ -19,6 +20,7 @@ const formList = {
   radio: radioConf,
   checkbox: checkBoxConf,
   datepicker: datePickerConf,
+  table: tableConf,
   // select: selectConf,
   // cascader: cascaderConf,
   // address: addressConf,

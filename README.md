@@ -2,7 +2,6 @@
 
 > 新项目需要用到工作流设定 + 自定义表单控件，这里列出了自定义表单控件的代码实现,可实现自定义表单控件,可拖拽排序，自定义属性
 
-
 ## 运行使用
 
 ``` bash
@@ -71,3 +70,7 @@ npm start
 - [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 - [Vue.js](https://vuejs.org/)
 - [iView](https://www.iviewui.com/docs/guide/install)
+
+### 更多参考
+- http://112.74.43.150/
+- http://dobtco.github.io/formbuilder/

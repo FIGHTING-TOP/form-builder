@@ -11,6 +11,7 @@ import p from './control/P';
 import uploads from './control/Uploads';
 import datepicker from './control/DatePicker';
 import address from './control/Address';
+import table from './control/TableMaker';
 
 import trigger from './config/trigger';
 
@@ -27,6 +28,7 @@ const form_item = {
   address,
   uploads,
   text,
+  table,
 };
 
 const displayControl = (_self, sortableItem, name, value) => {

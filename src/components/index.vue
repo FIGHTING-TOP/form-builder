@@ -47,7 +47,6 @@
                      @addOption="addOption" @removeOption="removeOption">
             </options>
           </FormItem>
-
           <FormItem label="占位符：" v-if="typeof modalFormData.placeholder != 'undefined'">
             <i-input v-model="modalFormData.placeholder" placeholder="请输入placeholder"></i-input>
           </FormItem>
@@ -101,6 +100,9 @@
           <FormItem label="字体颜色：" v-if="typeof modalFormData.color != 'undefined'">
             <ColorPicker v-model="modalFormData.color"/>
           </FormItem>
+          <FormItem label="表格：" v-if="modalFormData.type === 'table'">
+            <myTable :obj="modalFormData || {}" :data="formData"></myTable>
+          </FormItem>
         </Form>
         <div slot="footer">
           <Button type="text" @click="handleCancel">取消</Button>
@@ -137,6 +139,8 @@
             showOptions(){
                 let type = this.modalFormData.type;
                 return type==='select'||type==='radio'||type==='checkbox'
+            },
+            changeTableProperty(n){
             },
             addOption(){
                 this.modalFormData.items.push(this.modalFormData.items[0])
@@ -327,6 +331,7 @@
     };
 </script>
 <style lang="scss">
+  $borderColor: #dddee1;
   .label_item{
     font-size: 13px;
     display: inline-block;
@@ -344,9 +349,9 @@
     border: thin solid #19b394;
     border-bottom: 2px solid #16a085;
     user-select:none;
-    &.odd{
-      margin-right: 3%;
-    }
+    /*&.odd{*/
+    /*  margin-right: 3%;*/
+    /*}*/
   }
   .ivu-modal .label_item{
     width: 120px;
@@ -357,6 +362,23 @@
   /*  background: rgba(173, 213, 255,.4);*/
   /*}*/
   .ivu-modal .items *{cursor: auto}
+  input[type=text]{
+    border: 1px solid $borderColor;
+    margin-right: 6px;
+    &:last-child{margin-right: 0}
+  }
+  .dataTable {
+    border-spacing: 0;
+    border-bottom: 1px solid $borderColor;
+    border-left: 1px solid $borderColor;
+    tbody tr td{
+      border-top: 1px solid $borderColor;
+      border-right: 1px solid $borderColor;
+      padding: 6px;
+      margin: 0;
+    }
+  }
+
 
   .inline {
     display: inline-block;
