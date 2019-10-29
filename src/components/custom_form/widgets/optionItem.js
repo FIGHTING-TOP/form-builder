@@ -22,7 +22,6 @@ export const formOptions = (it, h, isEdit) => {
           placeholder: it.placeholder,
           oninput(e) {
             it.value = e.target.value;
-            console.log(e.target.value)
           }
         }
       })
@@ -43,7 +42,6 @@ export const formOptions = (it, h, isEdit) => {
         placeholder: it.placeholder,
         oninput(e) {
           it.value = e.target.value;
-          console.log(e.target.value)
         }
       }
     })

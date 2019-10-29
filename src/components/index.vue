@@ -14,7 +14,7 @@
       </i-col>
       <i-col span="21" class="sortable_item">
         <Form ref="formValidate" class="b-a" :label-width="100" :model="formData" @submit.native.prevent>
-          <Alert style="margin: 15px 15px 0;" type="warning" show-icon>未绑定数据字典控件无效</Alert>
+<!--          <Alert style="margin: 15px 15px 0;" type="warning" show-icon>未绑定数据字典控件无效</Alert>-->
           <draggable :list="sortable_item" :options="dragOptions2">
             <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
               <renders @handleRemoveEle="removeEle" @handleConfEle="confEle"
@@ -188,20 +188,23 @@
             // modal点击确定执行事件
             handleOk() {
                 const index = this.modalFormData.listIndex;
-                let flag;
-                this.modalFormData.items.map((v)=>{
-                    if(flag) return false;
-                    v.label_content.map(item=>{
-                        if(item.type==='property' && !item.value.trim()){
-                            flag = true;
-                            return false;
-                        }
-                    })
-                });
-                if(flag){
-                    alert('选项内容不能为空');
-                    return false
+                if(this.modalFormData.type==='radio'||this.modalFormData.type==='checkbox'){
+                    let flag;
+                    this.modalFormData.items.map((v)=>{
+                        if(flag) return false;
+                        v.label_content.map(item=>{
+                            if(item.type==='property' && !item.value.trim()){
+                                flag = true;
+                                return false;
+                            }
+                        })
+                    });
+                    if(flag){
+                        alert('选项内容不能为空');
+                        return false
+                    }
                 }
+
                 this.sortable_item[index].obj = Object.assign({},
                     this.sortable_item[index].obj,
                     this.modalFormData

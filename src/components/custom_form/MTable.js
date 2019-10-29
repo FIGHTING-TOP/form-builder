@@ -1,5 +1,3 @@
-import trigger from './config/trigger';
-import option from "./widgets/optionItem";
 import table from "./control/TableMaker";
 
 export default {

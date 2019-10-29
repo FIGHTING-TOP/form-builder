@@ -21,8 +21,7 @@ export default {
               if (v.label_value > i) i = v.label_value
             });
             obj.label_value = i + 1;
-            let o = this.obj.items.concat([obj]);
-            this.$set(this.obj, 'items', o);
+            this.$set(this.obj, 'items', this.obj.items.concat([obj]));
           }
         }
       }, ['添加']),

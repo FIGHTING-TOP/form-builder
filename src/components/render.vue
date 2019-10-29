@@ -1,6 +1,6 @@
 <template>
   <Form ref="formValidate" class="b-a" :label-width="100" :model="formData" @submit.native.prevent>
-    <p>未绑定数据字典控件无效</p>
+<!--    <p>未绑定数据字典控件无效</p>-->
     <renders v-for="(element,index) in template_form" :key="index" :index="index" :ele="element.ele" :obj="element.obj || {}" :data="formData" @handleChangeVal="val => handleChangeVal(val,element)" @changeVisibility="changeVisibility" :value="formData[element.obj.name]" :sortableItem="template_form">
     </renders>
     <FormItem>
