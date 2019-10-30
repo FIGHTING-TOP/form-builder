@@ -8,17 +8,20 @@ import 'iview/dist/styles/iview.css'
 import cascaderMulti from 'cascader-multi';
 import iviewArea from 'iview-area';
 import custom_form from './components/custom_form';
+import {$get, $http, $post} from "./utils/http";
 
-import axios from 'axios';
 
-Vue.config.productionTip = false
+
+Vue.config.productionTip = false;
 Vue.use(iview);
 Vue.use(cascaderMulti);
 Vue.use(custom_form);
 Vue.use(iviewArea);
 
-// axios.defaults.baseURL = '/apis';
-Vue.prototype.$http = axios;
+
+Vue.prototype.$http = $http;
+Vue.prototype.$get = $get;
+Vue.prototype.$post = $post;
 
 /* eslint-disable no-new */
 new Vue({

@@ -72,5 +72,6 @@ npm start
 - [iView](https://www.iviewui.com/docs/guide/install)
 
 ### 更多参考
+- https://github.com/mrabit/vue-formbuilder
 - http://112.74.43.150/
 - http://dobtco.github.io/formbuilder/

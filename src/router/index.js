@@ -4,7 +4,7 @@ import index from '@/components/index'
 import render from '@/components/render'
 import preview from '@/components/preview'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [{
@@ -12,7 +12,7 @@ export default new Router({
     name: 'index',
     component: index
   }, {
-    path: '/render',
+    path: '/render/:tableName',
     name: 'render',
     component: render
   }, {

@@ -11,7 +11,7 @@ export default {
     }
   },
   created() {
-    this.template_form = JSON.parse(localStorage.getItem('template_form') || '[]');
+    this.template_form = JSON.parse(sessionStorage.getItem('template_form') || '[]');
   }
 }
 

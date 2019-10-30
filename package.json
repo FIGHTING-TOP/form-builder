@@ -2,7 +2,7 @@
   "name": "vue-formbuilder",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "mrabit <biabia123456@126.com>",
+  "author": "Tiger",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

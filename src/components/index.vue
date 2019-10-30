@@ -1,115 +1,127 @@
 <template>
-  <div class="container">
-    <i-row>
-      <i-col span="3" class="sortable_container">
-        <Form :label-width="100" class="b-a">
-          <draggable :clone="cloneData" :list="form_list" :options="dragOptions1">
-            <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
+  <div>
+    <header>
+      <Select v-model="tableName" @on-change="handleTableNameChange">
+        <Option v-for="(item,index) in tableList" :value="item.tableName" :key="index">{{ item.tableDesc }}</Option>
+      </Select>
+    </header>
+    <div class="container">
+      <i-row>
+        <i-col span="3" class="sortable_container">
+          <Form :label-width="100" class="b-a">
+            <draggable :clone="cloneData" :list="form_list" :options="dragOptions1">
+              <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
             <span class="label_item" :class="{odd:index%2===0}"
                   v-for="(element,index) in form_list"
                   :key="index">{{element.obj.label}}</span>
-            </transition-group>
-          </draggable>
-        </Form>
-      </i-col>
-      <i-col span="21" class="sortable_item">
-        <Form ref="formValidate" class="b-a" :label-width="100" :model="formData" @submit.native.prevent>
-<!--          <Alert style="margin: 15px 15px 0;" type="warning" show-icon>未绑定数据字典控件无效</Alert>-->
-          <draggable :list="sortable_item" :options="dragOptions2">
-            <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
-              <renders @handleRemoveEle="removeEle" @handleConfEle="confEle"
-                       @changeVisibility="changeVisibility"
-                       v-for="(element,index) in sortable_item" :key="index"
-                       :index="index" :ele="element.ele" :obj="element.obj || {}"
-                       :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
-                       :sortableItem="sortable_item" :config-icon="true">
-              </renders>
-            </transition-group>
-          </draggable>
-          <FormItem>
-            <Button type="primary" @click="handleSubmit()">预览</Button>
-            <Button type="ghost" @click="handleReset()" style="margin-left: 8px">重置</Button>
-          </FormItem>
-        </Form>
-      </i-col>
-      <Modal v-model="showModal"
-             width="75%"
-             :title="'配置' + modalFormData.modalTitle + '属性'"
-             :mask-closable="false">
-        <Form class="form_content" :label-width="80" :model="modalFormData" ref="modalFormData">
-          <FormItem label="控件名称：" v-if="typeof modalFormData.label != 'undefined'">
-            <i-input v-model="modalFormData.label" placeholder="请输入控件名称" :maxlength="4"></i-input>
-          </FormItem>
-          <FormItem label="数据字典：" v-if="showOptions()">
-            <options v-for="(element,index) in modalFormData.items" :key="index"
-                     :index="index" :obj="modalFormData || {}" :ele="element"
-                     :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
-                     @addOption="addOption" @removeOption="removeOption">
-            </options>
-          </FormItem>
-          <FormItem label="占位符：" v-if="typeof modalFormData.placeholder != 'undefined'">
-            <i-input v-model="modalFormData.placeholder" placeholder="请输入placeholder"></i-input>
-          </FormItem>
-          <FormItem label="最大长度：" v-if="typeof modalFormData.maxLength != 'undefined'">
-            <InputNumber v-model="modalFormData.maxLength" placeholder="请输入文本限制最大长度">
-            </InputNumber>
-          </FormItem>
-          <FormItem label="最大限制：" v-if="typeof modalFormData.maxSize != 'undefined'">
-            <InputNumber :formatter="value => `${value}kb`" :parser="value => value.replace('kb', '')"
-                         v-model="modalFormData.maxSize" placeholder="请输入上传文件最大限制">
-            </InputNumber>
-          </FormItem>
-          <FormItem label="上边距：" v-if="typeof modalFormData.marginTop != 'undefined'">
-            <InputNumber :formatter="value => `${value}px`" :parser="value => value.replace('px', '')"
-                         v-model="modalFormData.marginTop" placeholder="请输入标签上边距">
-            </InputNumber>
-          </FormItem>
-          <FormItem label="下边距：" v-if="typeof modalFormData.marginBottom != 'undefined'">
-            <InputNumber :formatter="value => `${value}px`" :parser="value => value.replace('px', '')"
-                         v-model="modalFormData.marginBottom" placeholder="请输入标签下边距">
-            </InputNumber>
-          </FormItem>
-          <FormItem label="详细地址：" v-if="typeof modalFormData.details_address != 'undefined'">
-            <Checkbox v-model="modalFormData.details_address">是否需要详细地址</Checkbox>
-          </FormItem>
-          <FormItem label="是否必填：" v-if="typeof modalFormData.require != 'undefined'">
-            <Checkbox v-model="modalFormData.require">必填</Checkbox>
-          </FormItem>
-          <FormItem label="校验错误：" v-if="typeof modalFormData.ruleError != 'undefined'">
-            <i-input v-model="modalFormData.ruleError" placeholder="请输入校验错误提示"></i-input>
-          </FormItem>
-          <FormItem label="是否多选："
-                    v-if="typeof modalFormData.multiple != 'undefined' && modalFormData.type != 'address'">
-            <Checkbox v-model="modalFormData.multiple">多选</Checkbox>
-          </FormItem>
-          <FormItem label="时间格式：" v-if="typeof modalFormData.format != 'undefined'">
-            <RadioGroup v-model="modalFormData.format">
-              <Radio label="yyyy年MM月dd日"></Radio>
-              <Radio label="yyyy-MM-dd HH:mm"></Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="行内元素：" v-if="typeof modalFormData.inlineBlock != 'undefined'">
-            <Checkbox v-model="modalFormData.inlineBlock">是</Checkbox>
-          </FormItem>
-          <FormItem label="显示行数：" v-if="typeof modalFormData.maxRows != 'undefined'">
-            <Slider v-model="modalFormData.maxRows" :min="2" :max="10"></Slider>
-          </FormItem>
-          <FormItem label="标题大小：" v-if="typeof modalFormData.level != 'undefined'">
-            <InputNumber :max="6" :min="1" v-model="modalFormData.level"></InputNumber>
-          </FormItem>
-          <FormItem label="字体颜色：" v-if="typeof modalFormData.color != 'undefined'">
-            <ColorPicker v-model="modalFormData.color"/>
-          </FormItem>
-          <FormItem label="表格：" v-if="modalFormData.type === 'table'">
-            <myTable :obj="modalFormData || {}" :data="formData"></myTable>
-          </FormItem>
-        </Form>
-        <div slot="footer">
-          <Button type="text" @click="handleCancel">取消</Button>
-          <Button type="primary" :loading="modalFormData.loading" @click="handleOk">确定</Button>
-        </div>
-      </Modal>
-    </i-row>
+              </transition-group>
+            </draggable>
+          </Form>
+        </i-col>
+        <i-col span="21" class="sortable_item">
+          <Form ref="formValidate" class="b-a" :label-width="100" :model="formData" @submit.native.prevent>
+            <!--          <Alert style="margin: 15px 15px 0;" type="warning" show-icon>未绑定数据字典控件无效</Alert>-->
+            <draggable :list="sortable_item" :options="dragOptions2">
+              <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
+                <renders @handleRemoveEle="removeEle" @handleConfEle="confEle"
+                         @changeVisibility="changeVisibility"
+                         v-for="(element,index) in sortable_item" :key="index"
+                         :index="index" :ele="element.ele" :obj="element.obj || {}"
+                         :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
+                         :sortableItem="sortable_item" :config-icon="true">
+                </renders>
+              </transition-group>
+            </draggable>
+            <FormItem>
+              <Button type="primary" @click="handleSubmit()">预览</Button>
+              <Button type="ghost" @click="handleReset()" style="margin-left: 8px">重置</Button>
+            </FormItem>
+          </Form>
+        </i-col>
+        <Modal v-model="showModal"
+               width="75%"
+               :title="'配置' + modalFormData.modalTitle + '属性'"
+               :mask-closable="false">
+          <Form class="form_content" :label-width="80" :model="modalFormData" ref="modalFormData">
+            <FormItem label="对应字段：">
+              <Select v-model="modalFormData.name">
+                <Option v-for="(item,index) in nameList" :value="item.fieldName" :key="index">{{ item.fieldDesc }}
+                </Option>
+              </Select>
+            </FormItem>
+            <FormItem label="控件名称：" v-if="typeof modalFormData.label != 'undefined'">
+              <i-input v-model="modalFormData.label" placeholder="请输入控件名称" :maxlength="4"></i-input>
+            </FormItem>
+            <FormItem label="数据字典：" v-if="showOptions()">
+              <options v-for="(element,index) in modalFormData.items" :key="index"
+                       :index="index" :obj="modalFormData || {}" :ele="element"
+                       :data="formData" @handleChangeVal="val => handleChangeVal(val,element)">
+              </options>
+            </FormItem>
+            <FormItem label="占位符：" v-if="typeof modalFormData.placeholder != 'undefined'">
+              <i-input v-model="modalFormData.placeholder" placeholder="请输入placeholder"></i-input>
+            </FormItem>
+            <FormItem label="最大长度：" v-if="typeof modalFormData.maxLength != 'undefined'">
+              <InputNumber v-model="modalFormData.maxLength" placeholder="请输入文本限制最大长度">
+              </InputNumber>
+            </FormItem>
+            <FormItem label="最大限制：" v-if="typeof modalFormData.maxSize != 'undefined'">
+              <InputNumber :formatter="value => `${value}kb`" :parser="value => value.replace('kb', '')"
+                           v-model="modalFormData.maxSize" placeholder="请输入上传文件最大限制">
+              </InputNumber>
+            </FormItem>
+            <FormItem label="上边距：" v-if="typeof modalFormData.marginTop != 'undefined'">
+              <InputNumber :formatter="value => `${value}px`" :parser="value => value.replace('px', '')"
+                           v-model="modalFormData.marginTop" placeholder="请输入标签上边距">
+              </InputNumber>
+            </FormItem>
+            <FormItem label="下边距：" v-if="typeof modalFormData.marginBottom != 'undefined'">
+              <InputNumber :formatter="value => `${value}px`" :parser="value => value.replace('px', '')"
+                           v-model="modalFormData.marginBottom" placeholder="请输入标签下边距">
+              </InputNumber>
+            </FormItem>
+            <FormItem label="详细地址：" v-if="typeof modalFormData.details_address != 'undefined'">
+              <Checkbox v-model="modalFormData.details_address">是否需要详细地址</Checkbox>
+            </FormItem>
+            <FormItem label="是否必填：" v-if="typeof modalFormData.require != 'undefined'">
+              <Checkbox v-model="modalFormData.require">必填</Checkbox>
+            </FormItem>
+            <FormItem label="校验错误：" v-if="typeof modalFormData.ruleError != 'undefined'">
+              <i-input v-model="modalFormData.ruleError" placeholder="请输入校验错误提示"></i-input>
+            </FormItem>
+            <FormItem label="是否多选："
+                      v-if="typeof modalFormData.multiple != 'undefined' && modalFormData.type != 'address'">
+              <Checkbox v-model="modalFormData.multiple">多选</Checkbox>
+            </FormItem>
+            <FormItem label="时间格式：" v-if="typeof modalFormData.format != 'undefined'">
+              <RadioGroup v-model="modalFormData.format">
+                <Radio label="yyyy年MM月dd日"></Radio>
+                <Radio label="yyyy-MM-dd HH:mm"></Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="行内元素：" v-if="typeof modalFormData.inlineBlock != 'undefined'">
+              <Checkbox v-model="modalFormData.inlineBlock">是</Checkbox>
+            </FormItem>
+            <FormItem label="显示行数：" v-if="typeof modalFormData.maxRows != 'undefined'">
+              <Slider v-model="modalFormData.maxRows" :min="2" :max="10"></Slider>
+            </FormItem>
+            <FormItem label="标题大小：" v-if="typeof modalFormData.level != 'undefined'">
+              <InputNumber :max="6" :min="1" v-model="modalFormData.level"></InputNumber>
+            </FormItem>
+            <FormItem label="字体颜色：" v-if="typeof modalFormData.color != 'undefined'">
+              <ColorPicker v-model="modalFormData.color"/>
+            </FormItem>
+            <FormItem label="表格：" v-if="modalFormData.type === 'table'">
+              <myTable :obj="modalFormData || {}" :data="formData"></myTable>
+            </FormItem>
+          </Form>
+          <div slot="footer">
+            <Button type="text" @click="handleCancel">取消</Button>
+            <Button type="primary" :loading="modalFormData.loading" @click="handleOk">确定</Button>
+          </div>
+        </Modal>
+      </i-row>
+    </div>
   </div>
 </template>
 <script>
@@ -122,6 +134,9 @@
         },
         data() {
             return {
+                tableList: [{tableName: 'New York', tableDesc: 'New York'},],
+                tableName: '',
+                nameList: [{fieldName: '', fieldDesc: ''}],
                 form_list: form_list,
                 sortable_item: [],
                 showModal: false,
@@ -132,45 +147,38 @@
                     loading: false
                 },
                 formData: {},
-                dataDict: []
             };
         },
         methods: {
-            showOptions(){
+            showOptions() {
                 let type = this.modalFormData.type;
-                return type==='select'||type==='radio'||type==='checkbox'
+                return type === 'select' || type === 'radio' || type === 'checkbox'
             },
-            changeTableProperty(n){
-            },
-            addOption(){
-                this.modalFormData.items.push(this.modalFormData.items[0])
-            },
-            removeOption(i){},
             // 克隆表单提交事件
             handleSubmit() {
-                // localStorage.setItem('template_form', JSON.stringify(this.sortable_item.filter(v => {
-                //     return !!v.obj.name
-                // })));
-                localStorage.setItem('template_form', JSON.stringify(this.sortable_item));
-                this.$router.push('/render');
+                if(this.tableName){
+                    sessionStorage.setItem('template_form', JSON.stringify(this.sortable_item));
+                    this.$router.push({name:'render',params:{tableName:this.tableName}});
+                }else{
+                    alert('先要选择一个表')
+                }
             },
             // 清空克隆表单
             handleReset() {
                 this.sortable_item = [];
             },
             // modal内数据字典选项发生改变触发事件
-            handleDataDictChange(val) {
-                // 选中后，val默认赋值到modalFormData.dict
-                const obj = JSON.parse(val);
-                // 数据加载中，禁止modal_submit提交按钮
-                this.$set(this.modalFormData, 'loading', true);
-                this.$http.get(`/static/label.${obj.id}.json`).then(d => {
-                    this.modalFormData = Object.assign({}, this.modalFormData, {
-                        name: d.data.name,
-                        loading: false,
-                        items: d.data.items,
-                        parent_name: obj.parent_name
-                    });
+            handleTableNameChange(val) {
+                this.$post(`rest/template/queryTemplateHtml/${val}`).then(d => {
+                    let m = [];
+                    for (let x in d) {
+                        let o = d[x];
+                        m[d[x].index] = o
+                    }
+                    this.sortable_item = m;
+                });
+                this.$post(`rest/template/queryAllFields/${val}`).then(d => {
+                    this.nameList = d;
                 });
             },
             // 控件回填数据
@@ -188,18 +196,18 @@
             // modal点击确定执行事件
             handleOk() {
                 const index = this.modalFormData.listIndex;
-                if(this.modalFormData.type==='radio'||this.modalFormData.type==='checkbox'){
+                if (this.modalFormData.type === 'radio' || this.modalFormData.type === 'checkbox') {
                     let flag;
-                    this.modalFormData.items.map((v)=>{
-                        if(flag) return false;
-                        v.label_content.map(item=>{
-                            if(item.type==='property' && !item.value.trim()){
+                    this.modalFormData.items.map((v) => {
+                        if (flag) return false;
+                        v.label_content.map(item => {
+                            if (item.type === 'property' && !item.value.trim()) {
                                 flag = true;
                                 return false;
                             }
                         })
                     });
-                    if(flag){
+                    if (flag) {
                         alert('选项内容不能为空');
                         return false
                     }
@@ -263,19 +271,6 @@
             }
         },
         computed: {
-            // 数据字典已选择项
-            dataDictSelected() {
-                return this.sortable_item.map(v => {
-                    const obj = JSON.parse(v.obj.dict || '{}');
-                    return obj.id || -1;
-                })
-            },
-            // 对应控件的数据字典
-            dataDictList() {
-                return this.dataDict.filter(v => {
-                    return v.type == this.modalFormData.type;
-                })
-            },
             // 拖拽表单1
             dragOptions1() {
                 return {
@@ -302,40 +297,18 @@
                     }
                 };
             },
-            // 被关联字段列表
-            relationList() {
-                // 只有type内三项可作为被关联字段
-                let type = ['select', 'radio', 'checkbox'];
-                const arr = this.sortable_item.filter(k => {
-                    return type.indexOf(k.ele) >= 0 && !!k.obj.name;
-                })
-                return arr;
-            },
-            // 被关联字段数据
-            relationValue() {
-                const name = this.modalFormData.relation_name;
-                let items = [];
-                if (!name) return items;
-                for (let i in this.sortable_item) {
-                    if (this.sortable_item[i].obj.name == name) {
-                        items = this.sortable_item[i].obj.items;
-                    }
-                }
-                return items;
-            }
         },
         created() {
             // /static/label.json
-            this.$http.get('/static/label.json').then(d => {
-                this.dataDict = d.data.items;
+            this.$http.post('/rest/template/queryAllTables').then(res => {
+                this.tableList = res.data.data;
             });
-            this.sortable_item = JSON.parse(localStorage.getItem('template_form') || '[]');
         }
     };
 </script>
 <style lang="scss">
   $borderColor: #dddee1;
-  .label_item{
+  .label_item {
     font-size: 13px;
     display: inline-block;
     width: 100%;
@@ -351,30 +324,40 @@
     border-radius: .125rem;
     border: thin solid #19b394;
     border-bottom: 2px solid #16a085;
-    user-select:none;
+    user-select: none;
     /*&.odd{*/
     /*  margin-right: 3%;*/
     /*}*/
   }
-  .ivu-modal .label_item{
+
+  .ivu-modal .label_item {
     width: 120px;
     padding: 6px;
     margin-right: 20px;
   }
+
   /*.ivu-form-item:nth-child(2) .ivu-form-item-content{*/
   /*  background: rgba(173, 213, 255,.4);*/
   /*}*/
-  .ivu-modal .items *{cursor: auto}
-  input[type=text]{
+  .ivu-modal .items * {
+    cursor: auto
+  }
+
+  input[type=text] {
     border: 1px solid $borderColor;
     margin-right: 6px;
-    &:last-child{margin-right: 0}
+
+    &:last-child {
+      margin-right: 0
+    }
   }
+
   .dataTable {
     border-spacing: 0;
     border-bottom: 1px solid $borderColor;
     border-left: 1px solid $borderColor;
-    tbody tr td{
+
+    tbody tr td {
       border-top: 1px solid $borderColor;
       border-right: 1px solid $borderColor;
       padding: 6px;
