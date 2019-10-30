@@ -50,7 +50,7 @@
         created() {
             this.template_form = JSON.parse(sessionStorage.getItem('template_form') || '[]');
             for (let i in this.template_form) {
-                this.submitObj[this.template_form[i].obj.name] = Object.assign({},{index:i},this.template_form[i]);
+                this.submitObj[this.template_form[i].obj.name] = Object.assign({},this.template_form[i],{index:i});
                 this.$set(this.formData, this.template_form[i].obj.name, this.template_form[i].obj.value);
             }
         }
