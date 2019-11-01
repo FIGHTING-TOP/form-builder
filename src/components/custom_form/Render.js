@@ -79,7 +79,9 @@ export default {
           'sortable-items-required': validate
         },
         props: {
-          label: (this.obj.label || this.ele) + '：',
+          label: this.nameList.length>0&&this.obj.name&&(this.nameList.filter(v=>{return v.fieldName === this.obj.name})[0])
+            ? (this.nameList.filter(v=>{return v.fieldName === this.obj.name})[0])['fieldDesc'] + '：'
+            : (this.obj.label || this.ele) + '：',
           // 指定验证name
           prop: this.obj.name || 'temp',
           // 验证规则
@@ -114,9 +116,7 @@ export default {
           style: {
             'position': 'relative'
           },
-          class: {
-            items: true
-          },
+          class: 'items',
         },
         arr.concat(item_icon)
       );
@@ -169,6 +169,12 @@ export default {
       default () {
         return [];
       }
-    }
+    },
+    nameList: {
+      type: Array,
+      default () {
+        return [];
+      }
+    },
   }
 }

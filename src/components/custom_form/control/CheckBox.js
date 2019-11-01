@@ -9,7 +9,19 @@ export default (_self, h) => {
         checked: _self.hasChecked(v.label_value),
         onclick: (e) => {
           if (e.target.checked) {
-            _self.obj.value.push(v.label_value)
+            // option的第一个选项内容以‘无’开头，则和其他option互斥
+            if(_self.obj.hasMutex){
+              if(v.label_content[0].type==='property'&&v.label_content[0].value.indexOf('无')===0){
+                _self.obj.value = [v.label_value]
+              }else{
+                // 我们要求互斥的选项必须为第一个选项
+                let i = _self.obj.value.indexOf('1');
+                if(i>=0)_self.obj.value.splice(i,1);
+                _self.obj.value.push(v.label_value)
+              }
+            }else{
+              _self.obj.value.push(v.label_value)
+            }
           } else {
             _self.obj.value.splice(_self.obj.value.indexOf(v.label_value), 1)
           }
@@ -53,5 +65,7 @@ export let checkBoxConf = {
   // 关联字段value
   relation_value: '',
   // 是否被渲染
-  visibility: true
+  visibility: true,
+  // 是否含有互斥
+  hasMutex: false
 }

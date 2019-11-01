@@ -1,13 +1,14 @@
 <template>
   <Form ref="formValidate" class="b-a" :label-width="100" :model="formData" @submit.native.prevent>
     <!--    <p>未绑定数据字典控件无效</p>-->
-    <renders v-for="(element,index) in template_form" :key="index" :index="index" :ele="element.ele"
+    <renders v-for="(element,index) in template_form" :key="index" :index="index"
+             :ele="element.ele" :nameList="nameList"
              :obj="element.obj || {}" :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
              @changeVisibility="changeVisibility" :value="formData[element.obj.name]" :sortableItem="template_form">
     </renders>
     <FormItem>
       <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-      <Button type="ghost" @click="$router.go(-1)" style="margin-left: 8px">Back</Button>
+      <!--      <Button type="ghost" @click="$router.go(-1)" style="margin-left: 8px">Back</Button>-->
     </FormItem>
   </Form>
 </template>
@@ -16,9 +17,18 @@
         data() {
             return {
                 template_form: [],
-                formData: {},
-                submitObj: {}
+                nameList: [],
+                formData: {}
             }
+        },
+        computed: {
+            submitObj() {
+                let o = {};
+                for (let i in this.template_form) {
+                    o[this.template_form[i].obj.name] = Object.assign({}, this.template_form[i], {index: i});
+                }
+                return o;
+            },
         },
         methods: {
             // 控件回填数据
@@ -27,20 +37,15 @@
                 // this.formData[element.obj.name] = val;
             },
             handleSubmit(name) {
-                // this.$refs[name].validate((valid) => {
-                //   if (valid) {
-                //     window.sessionStorage.setItem('template_form', JSON.stringify(this.template_form));
-                //     this.$Message.success('Success!');
-                //     this.$router.push('/preview');
-                //   } else {
-                //     this.$Message.error('Fail!');
-                //   }
-                // })
-
-                this.$post(`rest/template/saveTemplateHtml/${this.$route.params.tableName}`,this.submitObj).then(d => {
-                    alert('保存成功');
-                    this.$router.go(-1);
-                });
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.$post(`rest/publichealth/saveOrUpdateUserInfo`, this.submitObj).then(d => {
+                            this.$Message.success('Success!');
+                        });
+                    } else {
+                        this.$Message.error('Fail!');
+                    }
+                })
             },
             // 更改当前渲染字段是否显示
             changeVisibility(index, visibility) {
@@ -48,16 +53,23 @@
             }
         },
         created() {
-            this.template_form = JSON.parse(sessionStorage.getItem('template_form') || '[]');
-            for (let i in this.template_form) {
-                this.submitObj[this.template_form[i].obj.name] = Object.assign({},this.template_form[i],{index:i});
-                this.$set(this.formData, this.template_form[i].obj.name, this.template_form[i].obj.value);
-            }
+            this.$post(`rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
+                this.nameList = d;
+            });
+            this.$post(`rest/publichealth/queryUserInfo/${this.$route.params.tableName}`).then(d => {
+                let m = [];
+                for (let x in d) {
+                    if (d[x] && d[x].index >= 0) {
+                        let o = d[x];
+                        m[d[x].index] = o
+                    }
+                }
+                this.template_form = m;
+            });
         }
     }
 
 </script>
 <style>
-
 
 </style>

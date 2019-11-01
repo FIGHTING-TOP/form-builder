@@ -95,7 +95,7 @@ export const optionItemBtn = (_self, h) => {
       class: "label_item",
       domProps: {
         onclick() {
-          _self.ele.label_content.push(optionsItemTypes[k])
+          _self.ele.label_content.push(JSON.parse(JSON.stringify(optionsItemTypes[k])))
         }
       }
     }, btnText)

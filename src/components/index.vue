@@ -1,40 +1,53 @@
 <template>
   <div>
-    <header>
+    <Modal v-model="showModal1"
+           width="50%"
+           footer-hide
+           :closable="false"
+           :title="'先要选择一个表'"
+           :mask-closable="false">
       <Select v-model="tableName" @on-change="handleTableNameChange">
         <Option v-for="(item,index) in tableList" :value="item.tableName" :key="index">{{ item.tableDesc }}</Option>
       </Select>
-    </header>
+    </Modal>
+    <h1>
+      当前表：<span v-for="(item,index) in tableList" v-if="tableName===item.tableName"
+                :key="index">{{item.tableDesc}}</span>
+      <button @click="(showModal1=true)">切换表</button>
+    </h1>
     <div class="container">
       <i-row>
         <i-col span="3" class="sortable_container">
-          <Form :label-width="100" class="b-a">
-            <draggable :clone="cloneData" :list="form_list" :options="dragOptions1">
-              <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
-            <span class="label_item" :class="{odd:index%2===0}"
-                  v-for="(element,index) in form_list"
-                  :key="index">{{element.obj.label}}</span>
-              </transition-group>
-            </draggable>
-          </Form>
+          <div style="width: 150px;position: fixed;">
+            <Form :label-width="100" class="b-a">
+              <draggable :clone="cloneData" :list="form_list" :options="dragOptions1">
+                <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
+                  <span class="label_item" :class="{odd:index%2===0}"
+                        v-for="(element,index) in form_list"
+                        :key="index">{{element.obj.label}}</span>
+                </transition-group>
+              </draggable>
+            </Form>
+          </div>
         </i-col>
-        <i-col span="21" class="sortable_item">
+        <i-col span="21" class="sortable_items" push="3">
           <Form ref="formValidate" class="b-a" :label-width="100" :model="formData" @submit.native.prevent>
             <!--          <Alert style="margin: 15px 15px 0;" type="warning" show-icon>未绑定数据字典控件无效</Alert>-->
-            <draggable :list="sortable_item" :options="dragOptions2">
+            <draggable :list="sortable_items" :options="dragOptions2">
               <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
                 <renders @handleRemoveEle="removeEle" @handleConfEle="confEle"
-                         @changeVisibility="changeVisibility"
-                         v-for="(element,index) in sortable_item" :key="index"
+                         @changeVisibility="changeVisibility" :nameList="nameList"
+                         v-for="(element,index) in sortable_items" :key="index"
                          :index="index" :ele="element.ele" :obj="element.obj || {}"
                          :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
-                         :sortableItem="sortable_item" :config-icon="true">
+                         :sortableItem="sortable_items" :config-icon="true">
                 </renders>
               </transition-group>
             </draggable>
             <FormItem>
-              <Button type="primary" @click="handleSubmit()">预览</Button>
-              <Button type="ghost" @click="handleReset()" style="margin-left: 8px">重置</Button>
+              <Button type="primary" @click="handlePreview()">预览</Button>
+              <Button type="success" @click="handleSubmit()" style="margin-left: 8px">保存</Button>
+              <Button type="warning" @click="handleReset()" style="margin-left: 8px">重置</Button>
             </FormItem>
           </Form>
         </i-col>
@@ -43,14 +56,11 @@
                :title="'配置' + modalFormData.modalTitle + '属性'"
                :mask-closable="false">
           <Form class="form_content" :label-width="80" :model="modalFormData" ref="modalFormData">
-            <FormItem label="对应字段：">
+            <FormItem label="字段名称：">
               <Select v-model="modalFormData.name">
                 <Option v-for="(item,index) in nameList" :value="item.fieldName" :key="index">{{ item.fieldDesc }}
                 </Option>
               </Select>
-            </FormItem>
-            <FormItem label="控件名称：" v-if="typeof modalFormData.label != 'undefined'">
-              <i-input v-model="modalFormData.label" placeholder="请输入控件名称" :maxlength="4"></i-input>
             </FormItem>
             <FormItem label="数据字典：" v-if="showOptions()">
               <options v-for="(element,index) in modalFormData.items" :key="index"
@@ -93,6 +103,10 @@
                       v-if="typeof modalFormData.multiple != 'undefined' && modalFormData.type != 'address'">
               <Checkbox v-model="modalFormData.multiple">多选</Checkbox>
             </FormItem>
+            <FormItem label="是否互斥："
+                      v-if="typeof modalFormData.hasMutex != 'undefined'">
+              <Checkbox v-model="modalFormData.hasMutex">含有互斥</Checkbox>
+            </FormItem>
             <FormItem label="时间格式：" v-if="typeof modalFormData.format != 'undefined'">
               <RadioGroup v-model="modalFormData.format">
                 <Radio label="yyyy年MM月dd日"></Radio>
@@ -108,16 +122,13 @@
             <FormItem label="标题大小：" v-if="typeof modalFormData.level != 'undefined'">
               <InputNumber :max="6" :min="1" v-model="modalFormData.level"></InputNumber>
             </FormItem>
-            <FormItem label="字体颜色：" v-if="typeof modalFormData.color != 'undefined'">
-              <ColorPicker v-model="modalFormData.color"/>
-            </FormItem>
             <FormItem label="表格：" v-if="modalFormData.type === 'table'">
               <myTable :obj="modalFormData || {}" :data="formData"></myTable>
             </FormItem>
           </Form>
           <div slot="footer">
             <Button type="text" @click="handleCancel">取消</Button>
-            <Button type="primary" :loading="modalFormData.loading" @click="handleOk">确定</Button>
+            <Button type="primary" @click="handleOk">确定</Button>
           </div>
         </Modal>
       </i-row>
@@ -134,48 +145,72 @@
         },
         data() {
             return {
-                tableList: [{tableName: 'New York', tableDesc: 'New York'},],
+                tableList: [{tableName: '', tableDesc: ''},],
                 tableName: '',
                 nameList: [{fieldName: '', fieldDesc: ''}],
                 form_list: form_list,
-                sortable_item: [],
+                sortable_items: [],
+                showModal1: true,
                 showModal: false,
                 // 深拷贝对象，防止默认空对象被更改
-                // 颜色选择器bug，对象下color不更新
-                modalFormData: {
-                    color: '',
-                    loading: false
-                },
+                modalFormData: {},
                 formData: {},
             };
         },
         methods: {
+            validateForm() {
+                let arr = [];
+                for (let i = 0; i < this.sortable_items.length; i++) {
+                    if (this.sortable_items[i].obj.name == null || this.sortable_items[i].obj.name === '') {
+                        alert('字段名称不能为空');
+                        return false;
+                    }
+                    arr.push(this.sortable_items[i].obj.name)
+                }
+                let map = new Map();
+                for(let i = 0;i<arr.length;i++){
+                    if(map[arr[i]]){
+                        alert('不能有重复的字段表单');
+                        return false;
+                    }
+                    map[arr[i]] = true;
+                }
+                if (!this.tableName) {
+                    alert('先要选择一个表');
+                    return false;
+                }
+            },
             showOptions() {
                 let type = this.modalFormData.type;
                 return type === 'select' || type === 'radio' || type === 'checkbox'
             },
-            // 克隆表单提交事件
+            handlePreview() {
+                this.validateForm();
+                sessionStorage.setItem('template_form', JSON.stringify(this.sortable_items));
+                this.$router.push({path: `/preview/${this.tableName}`});
+            },
             handleSubmit() {
-                if(this.tableName){
-                    sessionStorage.setItem('template_form', JSON.stringify(this.sortable_item));
-                    this.$router.push({name:'render',params:{tableName:this.tableName}});
-                }else{
-                    alert('先要选择一个表')
-                }
+                this.validateForm();
+                this.$post(`rest/template/saveTemplateHtml/${this.tableName}`, this.submitObj).then(d => {
+                    this.$Message.success('Success!');
+                });
             },
             // 清空克隆表单
             handleReset() {
-                this.sortable_item = [];
+                this.sortable_items = [];
             },
             // modal内数据字典选项发生改变触发事件
             handleTableNameChange(val) {
                 this.$post(`rest/template/queryTemplateHtml/${val}`).then(d => {
                     let m = [];
                     for (let x in d) {
-                        let o = d[x];
-                        m[d[x].index] = o
+                        if (x) {
+                            let o = d[x];
+                            m[d[x].index] = o
+                        }
                     }
-                    this.sortable_item = m;
+                    this.sortable_items = m;
+                    this.showModal1 = false;
                 });
                 this.$post(`rest/template/queryAllFields/${val}`).then(d => {
                     this.nameList = d;
@@ -213,8 +248,8 @@
                     }
                 }
 
-                this.sortable_item[index].obj = Object.assign({},
-                    this.sortable_item[index].obj,
+                this.sortable_items[index].obj = Object.assign({},
+                    this.sortable_items[index].obj,
                     this.modalFormData
                 );
                 this.handleCancel();
@@ -223,15 +258,12 @@
             handleCancel() {
                 this.showModal = false;
                 setTimeout(_ => {
-                    this.modalFormData = {
-                        color: '',
-                        loading: false
-                    };
+                    this.modalFormData = {};
                 }, 500)
             },
             // 显示modal,配置被克隆控件
             confEle(index) {
-                const list_temp = Object.assign({}, this.sortable_item[index]);
+                const list_temp = Object.assign({}, this.sortable_items[index]);
                 for (let i in list_temp.obj) {
                     this.modalFormData[i] = list_temp.obj[i];
                 }
@@ -245,22 +277,22 @@
             },
             // 删除克隆控件
             removeEle(index) {
-                let name = this.sortable_item[index].obj.name;
-                this.sortable_item.splice(index, 1);
+                let name = this.sortable_items[index].obj.name;
+                this.sortable_items.splice(index, 1);
                 if (!name) return;
-                for (let i in this.sortable_item) {
+                for (let i in this.sortable_items) {
                     // 当relation为true并且关联字段被确认
-                    if (this.sortable_item[i].obj.relation && this.sortable_item[i].obj.relation_name === name) {
-                        this.$set(this.sortable_item[i].obj, "relation", false);
-                        this.$set(this.sortable_item[i].obj, "relation_name", "");
-                        this.$set(this.sortable_item[i].obj, "relation_value", "");
+                    if (this.sortable_items[i].obj.relation && this.sortable_items[i].obj.relation_name === name) {
+                        this.$set(this.sortable_items[i].obj, "relation", false);
+                        this.$set(this.sortable_items[i].obj, "relation_name", "");
+                        this.$set(this.sortable_items[i].obj, "relation_value", "");
                         break;
                     }
                 }
             },
             // 更改当前渲染字段是否显示
             changeVisibility(index, visibility) {
-                this.$set(this.sortable_item[index].obj, 'visibility', visibility);
+                this.$set(this.sortable_items[index].obj, 'visibility', visibility);
             }
         },
         watch: {
@@ -271,6 +303,13 @@
             }
         },
         computed: {
+            submitObj() {
+                let o = {};
+                for (let i in this.sortable_items) {
+                    o[this.sortable_items[i].obj.name] = Object.assign({}, this.sortable_items[i], {index: i});
+                }
+                return o;
+            },
             // 拖拽表单1
             dragOptions1() {
                 return {
@@ -336,9 +375,9 @@
     margin-right: 20px;
   }
 
-  /*.ivu-form-item:nth-child(2) .ivu-form-item-content{*/
-  /*  background: rgba(173, 213, 255,.4);*/
-  /*}*/
+  .ivu-form-item .option span{
+    margin-right: 8px;
+  }
   .ivu-modal .items * {
     cursor: auto
   }

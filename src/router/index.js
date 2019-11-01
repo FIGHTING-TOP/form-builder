@@ -7,17 +7,21 @@ import preview from '@/components/preview'
 Vue.use(Router);
 
 export default new Router({
-  routes: [{
-    path: '/',
-    name: 'index',
-    component: index
-  }, {
-    path: '/render/:tableName',
-    name: 'render',
-    component: render
-  }, {
-    path: '/preview',
-    name: 'preview',
-    component: preview
-  }]
+  routes: [
+    {
+      path: '/',
+      name: 'index',
+      component: index
+    },
+    {
+      path: '/render/:tableName',
+      name: 'render',
+      component: render
+    },
+    {
+      path: '/preview/:tableName',
+      name: 'preview',
+      component: preview
+    },
+  ]
 })
