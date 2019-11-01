@@ -39,7 +39,7 @@
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$post(`rest/publichealth/saveOrUpdateUserInfo`, this.submitObj).then(d => {
+                        this.$post(`/hxk-biz/rest/publichealth/saveOrUpdateUserInfo`, this.submitObj).then(d => {
                             this.$Message.success('Success!');
                         });
                     } else {
@@ -53,10 +53,10 @@
             }
         },
         created() {
-            this.$post(`rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
+            this.$post(`/hxk-biz/rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
                 this.nameList = d;
             });
-            this.$post(`rest/publichealth/queryUserInfo/${this.$route.params.tableName}`).then(d => {
+            this.$post(`/hxk-biz/rest/publichealth/queryUserInfo/${this.$route.params.tableName}`).then(d => {
                 let m = [];
                 for (let x in d) {
                     if (d[x] && d[x].index >= 0) {

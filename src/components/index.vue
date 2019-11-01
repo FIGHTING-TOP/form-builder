@@ -191,7 +191,7 @@
             },
             handleSubmit() {
                 this.validateForm();
-                this.$post(`rest/template/saveTemplateHtml/${this.tableName}`, this.submitObj).then(d => {
+                this.$post(`/hxk-biz/rest/template/saveTemplateHtml/${this.tableName}`, this.submitObj).then(d => {
                     this.$Message.success('Success!');
                 });
             },
@@ -201,7 +201,7 @@
             },
             // modal内数据字典选项发生改变触发事件
             handleTableNameChange(val) {
-                this.$post(`rest/template/queryTemplateHtml/${val}`).then(d => {
+                this.$post(`/hxk-biz/rest/template/queryTemplateHtml/${val}`).then(d => {
                     let m = [];
                     for (let x in d) {
                         if (x) {
@@ -212,7 +212,7 @@
                     this.sortable_items = m;
                     this.showModal1 = false;
                 });
-                this.$post(`rest/template/queryAllFields/${val}`).then(d => {
+                this.$post(`/hxk-biz/rest/template/queryAllFields/${val}`).then(d => {
                     this.nameList = d;
                 });
             },
@@ -339,8 +339,8 @@
         },
         created() {
             // /static/label.json
-            this.$http.post('/rest/template/queryAllTables').then(res => {
-                this.tableList = res.data.data;
+            this.$post(`/hxk-biz/rest/template/queryAllTables`).then(d => {
+                this.tableList = d;
             });
         }
     };

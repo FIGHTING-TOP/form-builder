@@ -39,7 +39,7 @@
                   }
                 })
 
-                // this.$post(`rest/template/saveTemplateHtml/${this.$route.params.tableName}`,this.submitObj).then(d => {
+                // this.$post(`/hxk-biz/rest/template/saveTemplateHtml/${this.$route.params.tableName}`,this.submitObj).then(d => {
                 //     this.$Message.success('Success!');
                 //     this.$router.go(-1);
                 // });
@@ -50,7 +50,7 @@
             }
         },
         created() {
-            this.$post(`rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
+            this.$post(`/hxk-biz/rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
                 this.nameList = d;
             });
             this.template_form = JSON.parse(sessionStorage.getItem('template_form') || '[]');
