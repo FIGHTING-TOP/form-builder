@@ -25,7 +25,10 @@ export default {
               delete this.obj.tableContent[Math.max.apply(null,keys)];
               this.obj.tableContent = Object.assign({},{},this.obj.tableContent)
             }else{
-              alert('最少一行')
+              this.$Modal.warning({
+                title: '注意',
+                content: '最少一行'
+              });
             }
           }
         }
@@ -48,7 +51,10 @@ export default {
                 this.obj.tableContent[x].pop()
               }
             }else{
-              alert('最少一列')
+              this.$Modal.warning({
+                title: '注意',
+                content: '最少一列'
+              });
             }
           }
         }

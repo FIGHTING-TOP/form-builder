@@ -24,10 +24,16 @@ export default (_self, h, isEdit) => {
                       _self.obj.tableContent[x][y].splice(e.target.dataset.index, 1);
                       _self.obj.tableContent = Object.assign({}, {}, _self.obj.tableContent)
                     } else {
-                      alert('最少要有一个输入框')
+                      _self.$Modal.warning({
+                        title: '注意',
+                        content: '最少要有一个输入框'
+                      });
                     }
                   } else {
-                    alert('最少要有一个输入框')
+                    _self.$Modal.warning({
+                      title: '注意',
+                      content: '最少要有一个输入框'
+                    });
                   }
                 }
               }

@@ -4,7 +4,7 @@ export default (_self, h) => {
   if (!!_self.obj.config) {
     icons.push(h('Icon', {
       props: {
-        type: 'gear-a',
+        type: 'md-settings',
       },
       nativeOn: {
         click() {
@@ -16,7 +16,7 @@ export default (_self, h) => {
   // 删除按钮
   icons.push(h('Icon', {
     props: {
-      type: 'minus-round'
+      type: 'md-remove-circle'
     },
     nativeOn: {
       click() {

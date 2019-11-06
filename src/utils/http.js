@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 // axios.defaults.baseURL = '/apis';
 
 export const $get = (url) => {
@@ -17,16 +16,19 @@ export const $get = (url) => {
   })
 };
 
-export const $post = async (url,params={}) => {
+export const $post = async function (url,params={}) {
   try{
     let r = await axios.post(url,params);
     if (r.data && r.data.resultCode == 0) {
       return r.data.data
     } else {
-      alert(r.data.msg);
+      this.$Modal.warning({
+        title: '注意',
+        content: r.data.msg
+      });
     }
   }catch(e){
-    console.log(e)
+    throw e;
   }
 };
 

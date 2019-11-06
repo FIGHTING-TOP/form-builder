@@ -27,6 +27,7 @@ export let inputConf = {
   config: true,
   // 控件左侧label内容
   label: '输入框',
+  // 占位符
   placeholder: '',
   // 是否显示行内元素
   inlineBlock: false,
@@ -34,9 +35,16 @@ export let inputConf = {
   require: true,
   // 最大长度
   maxLength: 20,
-  // 选项内数据
-  items: [{ "label_value": null, "label_name": "" }],
+  // 输入框值
   value: '',
+  // 校验规则
+  rules: {
+    noLimit: {name:'不设置',rule:null},
+    mobile: {name:'手机',rule:/^1[3-9][0-9]{9}$/},
+    telephone: {name:'座机',rule:/^(0[\d]{2,3}-?)\d{6,8}(-?\d{3,4})?$/},
+    number: {name:'纯数字',rule:/^[0-9]+$/},
+  },
+  myRule: 'noLimit',
   // 表单name
   name: '',
   // 验证错误提示信息
@@ -49,4 +57,4 @@ export let inputConf = {
   relation_value: '',
   // 是否被渲染
   visibility: true
-}
+};

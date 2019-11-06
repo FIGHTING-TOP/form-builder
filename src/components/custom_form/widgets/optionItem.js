@@ -83,6 +83,7 @@ export const optionsItemTypes = {
   date: {
     type: 'date',
     value: '',
+    format: "yyyy年MM月dd日",
     placeholder: '请选择日期'
   }
 };

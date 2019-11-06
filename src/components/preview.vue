@@ -7,8 +7,7 @@
              @changeVisibility="changeVisibility" :value="formData[element.obj.name]" :sortableItem="template_form">
     </renders>
     <FormItem>
-      <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-      <Button type="ghost" @click="$router.go(-1)" style="margin-left: 8px">Back</Button>
+      <Button :type="'primary'" @click="$router.go(-1)">返回</Button>
     </FormItem>
   </Form>
 </template>

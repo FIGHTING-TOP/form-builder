@@ -31,7 +31,10 @@ export default {
             if (this.obj.items.length > 1) {
               this.obj.items.splice(this.index, 1);
             } else {
-              alert('最少一个option')
+              this.$Modal.warning({
+                title: '注意',
+                content: '最少一个option'
+              });
             }
           }
         }

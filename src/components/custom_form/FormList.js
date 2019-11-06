@@ -10,7 +10,7 @@ import { tableConf } from './control/TableMaker';
 // import { hrConf } from "./control/Hr";
 // import { pConf } from "./control/P";
 // import { uploadsConf } from './control/Uploads';
-// import { addressConf } from './control/Address';
+import { addressConf } from './control/Address';
 
 const formList = {
   // title: titleConf,
@@ -23,7 +23,7 @@ const formList = {
   table: tableConf,
   // select: selectConf,
   // cascader: cascaderConf,
-  // address: addressConf,
+  address: addressConf,
   // uploads: uploadsConf,
   // text: textConf,
 };
