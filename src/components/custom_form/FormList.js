@@ -5,17 +5,17 @@ import { datePickerConf } from './control/DatePicker';
 import { tableConf } from './control/TableMaker';
 // import { selectConf } from "./control/Select";
 // import { cascaderConf } from "./control/Cascader";
-// import { textConf } from "./control/Text";
-// import { titleConf } from "./control/Title";
+import { textConf } from "./control/Text";
+import { titleConf } from "./control/Title";
 // import { hrConf } from "./control/Hr";
-// import { pConf } from "./control/P";
+import { pConf } from "./control/P";
 // import { uploadsConf } from './control/Uploads';
 import { addressConf } from './control/Address';
 
 const formList = {
-  // title: titleConf,
+  title: titleConf,
   // hr: hrConf,
-  // p: pConf,
+  p: pConf,
   input: inputConf,
   radio: radioConf,
   checkbox: checkBoxConf,
@@ -25,7 +25,7 @@ const formList = {
   // cascader: cascaderConf,
   address: addressConf,
   // uploads: uploadsConf,
-  // text: textConf,
+  text: textConf,
 };
 let list_arr = [];
 for (let i in formList) {

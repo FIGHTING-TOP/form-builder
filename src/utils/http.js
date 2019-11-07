@@ -8,10 +8,10 @@ export const $get = (url) => {
       if (r.data.resultCode == 0) {
         resolve(r.data.data)
       } else {
-        alert(r.data.msg)
+        reject(r.data.msg)
       }
     }).catch((err)=>{
-      console.log(err)
+      reject(err)
     });
   })
 };
