@@ -103,7 +103,7 @@ export default {
           // 是否显示行内元素
           display: this.obj.inlineBlock ? 'inline-block' : 'block',
           // 行内元素width为30%
-          width: this.obj.inlineBlock ? '33%' : 'auto',
+          width: this.obj.inlineBlock ? '50%' : 'auto',
         }
       };
       return h(
