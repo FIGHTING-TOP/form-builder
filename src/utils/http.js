@@ -22,8 +22,8 @@ export const $post = async function (url, params = {}) {
     if (r.data && r.data.resultCode == 0) {
       return r.data.data
     } else {
-      this.$Modal.warning({
-        title: '注意',
+      this.$Modal.error({
+        title: '错误',
         content: r.data.msg
       });
     }

@@ -66,6 +66,9 @@
                 </Option>
               </Select>
             </FormItem>
+            <FormItem label="内容：" v-if="!showOptions(0)">
+              <i-input v-model="modalFormData.label" placeholder="请输入内容"></i-input>
+            </FormItem>
             <FormItem label="数据字典：" v-if="showOptions(1)">
               <options v-for="(element,index) in modalFormData.items" :key="index"
                        :index="index" :obj="modalFormData || {}" :ele="element"
@@ -205,8 +208,8 @@
             arr.push(this.sortable_items[i].ele + i)
           } else {
             if (this.sortable_items[i].obj.name == null || this.sortable_items[i].obj.name === '') {
-              this.$Modal.warning({
-                title: '注意',
+              this.$Modal.error({
+                title: '错误',
                 content: '字段名称不能为空'
               });
               return false;
@@ -217,8 +220,8 @@
         let map = new Map();
         for (let i = 0; i < arr.length; i++) {
           if (map[arr[i]]) {
-            this.$Modal.warning({
-              title: '注意',
+            this.$Modal.error({
+              title: '错误',
               content: '不能有重复的字段表单'
             });
             return false;
@@ -226,8 +229,8 @@
           map[arr[i]] = true;
         }
         if (!this.tableName) {
-          this.$Modal.warning({
-            title: '注意',
+          this.$Modal.error({
+            title: '错误',
             content: '先要选择一个表'
           });
           return false;
@@ -314,16 +317,27 @@
             })
           });
           if (flag) {
-            this.$Modal.warning({
-              title: '注意',
+            this.$Modal.error({
+              title: '错误',
               content: '选项内容和选项的值不能为空'
             });
             return false
           }
         }
+        // title、p的验证
+        if(!this.showOptions(0)){
+          if(this.modalFormData.label.trim()===''){
+            this.$Modal.error({
+              title: '错误',
+              content: '内容不能为空'
+            });
+            return false
+          }
+        }
+        // 含有互斥的验证
         if (this.modalFormData.hasMutex && !this.modalFormData.mutexIndex) {
-          this.$Modal.warning({
-            title: '注意',
+          this.$Modal.error({
+            title: '错误',
             content: '互斥索引不正确'
           });
           return false;
