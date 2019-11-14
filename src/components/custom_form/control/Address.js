@@ -18,12 +18,12 @@ export default (_self, h) => {
         // trigger: "hover"
       },
       on: {
-        "on-change" (arr) {
+        "on-change" (arr,a) {
           if (!_self.obj.name) {
             return false;
           }
-          _self.obj.value = arr;
-          _self.$emit('handleChangeVal', arr);
+          _self.obj.value = a;
+          _self.$emit('handleChangeVal', a);
         }
       }
     }),

@@ -2,21 +2,19 @@ import optionsItem, {formOptions} from "../widgets/optionItem";
 
 export default (_self, h) => {
   let options = [];
-  _self.obj.items.map(v => {
+  _self.obj.items.map((v,i) => {
     options.push(h("input", {
       domProps: {
         type: 'checkbox',
         checked: _self.hasChecked(v.label_value),
         onclick: (e) => {
           if (e.target.checked) {
-            // option的第一个选项内容以‘无’开头，则和其他option互斥
+            // option根据mutexIndex互斥，mutexIndex从1开始
             if(_self.obj.hasMutex){
-              if(v.label_content[0].type==='property'&&v.label_content[0].value.indexOf('无')===0){
+              if(_self.obj.mutexIndex - 1 === i){
                 _self.obj.value = [v.label_value]
               }else{
-                // 我们要求互斥的选项必须为第一个选项
-                let i = _self.obj.value.indexOf('1');
-                if(i>=0)_self.obj.value.splice(i,1);
+                if(i>=0)_self.obj.value.splice(i-1,1);
                 _self.obj.value.push(v.label_value)
               }
             }else{

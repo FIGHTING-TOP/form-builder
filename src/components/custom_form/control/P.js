@@ -18,5 +18,6 @@ export const pConf = {
   label: '文本标签',
   color: '#000',
   marginTop: 0,
-  marginBottom: 24
+  marginBottom: 24,
+  type: 'p'
 }

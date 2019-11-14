@@ -11,11 +11,11 @@ export default (_self, h) => {
           _self.obj.value = v.label_value
         }
       }
-    }))
+    }));
     v.label_content.map((it) => {
       options.push(formOptions(it,h))
     })
-  })
+  });
   return [
     h("div", {
       class: 'option'

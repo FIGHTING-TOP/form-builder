@@ -21,5 +21,6 @@ export let titleConf = {
   level: 3,
   hasLine: true,
   marginTop: 0,
-  marginBottom: 24
+  marginBottom: 24,
+  type: 'title'
 }

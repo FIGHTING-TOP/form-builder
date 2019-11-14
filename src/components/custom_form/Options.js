@@ -43,6 +43,18 @@ export default {
 
     let checkGroupItem = [
       h("input", {
+        class: 'label_value',
+        style: {width: '60px'},
+        domProps: {
+          type: 'text',
+          placeholder: '选项的值',
+          value: this.ele.label_value,
+          oninput: (e) => {
+            this.ele.label_value = e.target.value
+          }
+        }
+      }),
+      h("input", {
         domProps: {
           type: this.obj.type,
           checked: this.hasChecked(),
@@ -118,7 +130,7 @@ export default {
     );
   },
   methods:{
-    hasChecked(v){
+    hasChecked(){
       if(this.obj.type==='radio'){
         return this.obj.value === this.ele.label_value
       }

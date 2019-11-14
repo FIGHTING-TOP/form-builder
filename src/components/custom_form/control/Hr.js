@@ -14,5 +14,6 @@ export const hrConf = {
   label: '分割线',
   config: true,
   marginTop: 0,
-  marginBottom: 24
+  marginBottom: 24,
+  type: 'hr'
 }

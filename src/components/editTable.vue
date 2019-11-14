@@ -55,13 +55,17 @@
                :title="'配置' + modalFormData.modalTitle + '属性'"
                :mask-closable="false">
           <Form class="form_content" :label-width="80" :model="modalFormData" ref="modalFormData">
-            <FormItem label="字段名称：">
+            <FormItem label="字段名称：" v-if="showOptions(0)">
               <Select v-model="modalFormData.name">
-                <Option v-for="(item,index) in nameList" :value="item.fieldName" :key="index">{{ item.fieldDesc }}
+                <Option v-for="(item,index) in nameList" :value="item.fieldName" :key="index">
+                  {{ item.fieldDesc }}
+                  <button v-if="modalFormData.name===item.fieldName"
+                    style="float:right;border:none;padding:5px 10px;margin-top: -7px;
+                  background: #1abc9c;color: white;" @click="customizedName(index)">自定义</button>
                 </Option>
               </Select>
             </FormItem>
-            <FormItem label="数据字典：" v-if="showOptions()">
+            <FormItem label="数据字典：" v-if="showOptions(1)">
               <options v-for="(element,index) in modalFormData.items" :key="index"
                        :index="index" :obj="modalFormData || {}" :ele="element"
                        :data="formData" @handleChangeVal="val => handleChangeVal(val,element)">
@@ -111,6 +115,10 @@
             <FormItem label="是否互斥："
                       v-if="typeof modalFormData.hasMutex != 'undefined'">
               <Checkbox v-model="modalFormData.hasMutex">含有互斥</Checkbox>
+              <span style="margin-left: 10px" v-if="modalFormData.hasMutex">
+                互斥项为第<input type="text" v-model="modalFormData.mutexIndex" style="width:50px">项
+                （从 1 开始算）
+              </span>
             </FormItem>
             <FormItem label="时间格式：" v-if="typeof modalFormData.format != 'undefined'">
               <RadioGroup v-model="modalFormData.format">
@@ -171,17 +179,39 @@
             });
         },
         methods: {
+          customizedName(i){
+            let newName = prompt('自定义字段名称');
+            if(newName != null){
+              if(newName.match(/[a-zA-Z\u4e00-\u9fa5]/g)){
+                this.nameList[i]['fieldDesc'] = newName;
+                let s = this.modalFormData.name;
+                this.modalFormData.name = null;
+                this.$nextTick(()=>{
+                  this.modalFormData.name = s
+                })
+              }else{
+                this.$Modal.error({
+                  title: '失败',
+                  content: '字段名称含有非法字符'
+                });
+              }
+            }
+          },
             validateForm() {
                 let arr = [];
                 for (let i = 0; i < this.sortable_items.length; i++) {
+                  if(this.sortable_items[i].ele==='title'||this.sortable_items[i].ele==='hr'||this.sortable_items[i].ele==='p'){
+                    arr.push(this.sortable_items[i].ele+i)
+                  }else{
                     if (this.sortable_items[i].obj.name == null || this.sortable_items[i].obj.name === '') {
-                        this.$Modal.warning({
-                            title: '注意',
-                            content: '字段名称不能为空'
-                        });
-                        return false;
+                      this.$Modal.warning({
+                        title: '注意',
+                        content: '字段名称不能为空'
+                      });
+                      return false;
                     }
                     arr.push(this.sortable_items[i].obj.name)
+                  }
                 }
                 let map = new Map();
                 for(let i = 0;i<arr.length;i++){
@@ -202,9 +232,13 @@
                     return false;
                 }
             },
-            showOptions() {
+            showOptions(i) {
                 let type = this.modalFormData.type;
-                return type === 'select' || type === 'radio' || type === 'checkbox'
+                if(i===0){
+                  return !(type === 'title' || type === 'hr' || type === 'p')
+                }else{
+                  return type === 'select' || type === 'radio' || type === 'checkbox'
+                }
             },
             handlePreview() {
                 this.validateForm();
@@ -219,14 +253,13 @@
             },
             // 清空克隆表单
             handleReset() {
-                // this.$Modal.confirm({
-                //     title: '提示',
-                //     content: '<p>确定要重置该表单吗？</p>',
-                //     onOk: () => {
-                //         this.sortable_items = [];
-                //     }
-                // });
-                this.sortable_items = [];
+                this.$Modal.confirm({
+                    title: '提示',
+                    content: '<p>确定要重置该表单吗？</p>',
+                    onOk: () => {
+                        this.sortable_items = [];
+                    }
+                });
             },
             // modal内数据字典选项发生改变触发事件
             handleTableNameChange(val) {
@@ -268,6 +301,7 @@
                     let flag;
                     this.modalFormData.items.map((v) => {
                         if (flag) return false;
+                        if (!v.label_value){flag = true; return false;}
                         v.label_content.map(item => {
                             if (item.type === 'property' && !item.value.trim()) {
                                 flag = true;
@@ -278,11 +312,18 @@
                     if (flag) {
                         this.$Modal.warning({
                             title: '注意',
-                            content: '选项内容不能为空'
+                            content: '选项内容和选项的值不能为空'
                         });
                         return false
                     }
                 }
+              if (this.modalFormData.hasMutex && !this.modalFormData.mutexIndex) {
+                this.$Modal.warning({
+                  title: '注意',
+                  content: '互斥索引不正确'
+                });
+                return false;
+              }
 
                 this.sortable_items[index].obj = Object.assign({},
                     this.sortable_items[index].obj,
@@ -342,7 +383,10 @@
             submitObj() {
                 let o = {};
                 for (let i in this.sortable_items) {
-                    o[this.sortable_items[i].obj.name] = Object.assign({}, this.sortable_items[i], {index: i});
+                  if (!this.sortable_items[i].obj.name) {
+                    this.sortable_items[i].obj.name = `${this.sortable_items[i].ele}@${i}`
+                  }
+                  o[this.sortable_items[i].obj.name] = Object.assign({}, this.sortable_items[i], {index: i});
                 }
                 return o;
             },
@@ -397,6 +441,10 @@
     /*&.odd{*/
     /*  margin-right: 3%;*/
     /*}*/
+  }
+
+  input[type=checkbox],input[type=radio] {
+    margin-right: 6px;
   }
 
   .ivu-modal .label_item {
