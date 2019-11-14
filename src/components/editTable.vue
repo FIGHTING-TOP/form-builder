@@ -35,7 +35,7 @@
             <draggable :list="sortable_items" :options="dragOptions2">
               <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
                 <renders @handleRemoveEle="removeEle" @handleConfEle="confEle"
-                         @changeVisibility="changeVisibility" :nameList="nameList"
+                         :nameList="nameList"
                          v-for="(element,index) in sortable_items" :key="index"
                          :index="index" :ele="element.ele" :obj="element.obj || {}"
                          :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
@@ -326,10 +326,10 @@
                     }
                 }
             },
-            // 更改当前渲染字段是否显示
-            changeVisibility(index, visibility) {
-                this.$set(this.sortable_items[index].obj, 'visibility', visibility);
-            }
+            // // 更改当前渲染字段是否显示
+            // changeVisibility(index, visibility) {
+            //     this.$set(this.sortable_items[index].obj, 'visibility', visibility);
+            // }
         },
         watch: {
             showModal(val) {

@@ -6,7 +6,7 @@
           <Menu mode="horizontal" theme="dark" active-name="1" @on-select="clickMenu">
             <div class="layout-logo"></div>
             <div class="layout-nav">
-              <MenuItem name="1">
+              <MenuItem name="1" v-if="$route.name !== 'index'">
                 <Icon type="ios-keypad"></Icon>
                 管理表
               </MenuItem>

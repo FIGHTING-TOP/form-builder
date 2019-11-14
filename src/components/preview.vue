@@ -4,7 +4,7 @@
     <renders v-for="(element,index) in template_form" :key="index" :index="index"
              :ele="element.ele" :nameList="nameList"
              :obj="element.obj || {}" :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
-             @changeVisibility="changeVisibility" :value="formData[element.obj.name]" :sortableItem="template_form">
+             :value="formData[element.obj.name]" :sortableItem="template_form">
     </renders>
     <FormItem>
       <Button :type="'primary'" @click="$router.go(-1)">返回</Button>
@@ -44,9 +44,9 @@
                 // });
             },
             // 更改当前渲染字段是否显示
-            changeVisibility(index, visibility) {
-                this.$set(this.template_form[index].obj, 'visibility', visibility);
-            }
+            // changeVisibility(index, visibility) {
+            //     this.$set(this.template_form[index].obj, 'visibility', visibility);
+            // }
         },
         created() {
             this.$post(`/hxk-biz/rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {

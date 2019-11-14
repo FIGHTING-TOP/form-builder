@@ -10,7 +10,7 @@ export default {
           onclick: () => {
             let rowContent = [];
             for (let y in this.obj.tableContent[0]) {
-              rowContent.push('')
+              rowContent.push([''])
             }
             this.obj.tableContent[Object.keys(this.obj.tableContent).length] = rowContent;
             this.obj.tableContent = Object.assign({},{},this.obj.tableContent)
@@ -37,7 +37,7 @@ export default {
         domProps: {
           onclick: () => {
             for (let x in this.obj.tableContent) {
-              this.obj.tableContent[x].push('')
+              this.obj.tableContent[x].push([''])
             }
             // this.$set(this.obj, 'items', o);
           }

@@ -55,8 +55,9 @@ export default (_self, h, isEdit) => {
             ].concat(buttonGroup)
           )
         }
-        return (v?h('span',{},v):h(
-          'div', {class: 'tableInputItem'},
+        return (v
+          ? h('span',{},v)
+          : h('div', {class: 'tableInputItem'},
           [
             h('input', {
               attrs: {'data-index': i},
