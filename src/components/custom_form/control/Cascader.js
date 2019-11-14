@@ -2,7 +2,7 @@ const temp_data = (size, parentIndex, parentName) => {
   if (parentIndex >= 3) {
     return [];
   }
-  return Array.apply(null, { length: size })
+  return Array.apply(null, {length: size})
     .map((k, v) => {
       const name = parentName + (v + 1) + "-";
       return {
@@ -25,7 +25,7 @@ export default (_self, h) => {
         value: _self.obj.value || []
       },
       on: {
-        "on-change" (arr) {
+        "on-change"(arr) {
           if (!_self.obj.name) {
             return false;
           }

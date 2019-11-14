@@ -2,7 +2,7 @@ import optionsItem, {formOptions} from "../widgets/optionItem";
 
 export default (_self, h) => {
   let options = [];
-  _self.obj.items.map((v,i) => {
+  _self.obj.items.map((v, i) => {
     options.push(h("input", {
       domProps: {
         type: 'checkbox',
@@ -10,14 +10,14 @@ export default (_self, h) => {
         onclick: (e) => {
           if (e.target.checked) {
             // option根据mutexIndex互斥，mutexIndex从1开始
-            if(_self.obj.hasMutex){
-              if(_self.obj.mutexIndex - 1 === i){
+            if (_self.obj.hasMutex) {
+              if (_self.obj.mutexIndex - 1 === i) {
                 _self.obj.value = [v.label_value]
-              }else{
-                if(i>=0)_self.obj.value.splice(i-1,1);
+              } else {
+                if (i >= 0) _self.obj.value.splice(i - 1, 1);
                 _self.obj.value.push(v.label_value)
               }
-            }else{
+            } else {
               _self.obj.value.push(v.label_value)
             }
           } else {
@@ -26,8 +26,8 @@ export default (_self, h) => {
         }
       }
     }))
-      v.label_content.map((it) => {
-        options.push(formOptions(it,h))
+    v.label_content.map((it) => {
+      options.push(formOptions(it, h))
     })
   })
   return [

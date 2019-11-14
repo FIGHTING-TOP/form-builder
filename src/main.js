@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import iview from 'iview';
-import '../static/iview.css'
+import './assets/css/iview.css'
 import cascaderMulti from 'cascader-multi';
 import iviewArea from 'iview-area';
 import custom_form from './components/custom_form';

@@ -7,7 +7,7 @@ export default (_self, h) => {
           value: _self.obj.value || ''
         },
         on: {
-          'on-change' (value) {
+          'on-change'(value) {
             if (!_self.obj.name) {
               return false;
             }
@@ -43,7 +43,7 @@ export let selectConf = {
   // 是否必填
   require: true,
   // 选项内数据
-  items: Array.apply(null, { length: 5 })
+  items: Array.apply(null, {length: 5})
     .map((k, v) => {
       return {
         label_value: v + 1,

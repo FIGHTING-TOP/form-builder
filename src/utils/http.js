@@ -3,22 +3,22 @@ import axios from 'axios';
 // axios.defaults.baseURL = '/apis';
 
 export const $get = (url) => {
-  return new Promise((resolve, reject)=>{
-    axios.get(url).then((r)=>{
+  return new Promise((resolve, reject) => {
+    axios.get(url).then((r) => {
       if (r.data.resultCode == 0) {
         resolve(r.data.data)
       } else {
         reject(r.data.msg)
       }
-    }).catch((err)=>{
+    }).catch((err) => {
       reject(err)
     });
   })
 };
 
-export const $post = async function (url,params={}) {
-  try{
-    let r = await axios.post(url,params);
+export const $post = async function (url, params = {}) {
+  try {
+    let r = await axios.post(url, params);
     if (r.data && r.data.resultCode == 0) {
       return r.data.data
     } else {
@@ -27,7 +27,7 @@ export const $post = async function (url,params={}) {
         content: r.data.msg
       });
     }
-  }catch(e){
+  } catch (e) {
     throw e;
   }
 };

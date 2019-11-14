@@ -79,8 +79,12 @@ export default {
           'sortable-items-required': validate
         },
         props: {
-          label: this.nameList.length>0&&this.obj.name&&(this.nameList.filter(v=>{return v.fieldName === this.obj.name})[0])
-            ? (this.nameList.filter(v=>{return v.fieldName === this.obj.name})[0])['fieldDesc'] + '：'
+          label: this.nameList.length > 0 && this.obj.name && (this.nameList.filter(v => {
+            return v.fieldName === this.obj.name
+          })[0])
+            ? (this.nameList.filter(v => {
+            return v.fieldName === this.obj.name
+          })[0])['fieldDesc'] + '：'
             : (this.obj.label || this.ele) + '：',
           // 指定验证name
           prop: this.obj.name || 'temp',
@@ -122,11 +126,11 @@ export default {
       );
     }
   },
-  methods:{
-    hasChecked(v){
-      if(this.obj.type==='radio'){
+  methods: {
+    hasChecked(v) {
+      if (this.obj.type === 'radio') {
         return this.obj.value === v
-      }else if(this.obj.type==='checkbox'){
+      } else if (this.obj.type === 'checkbox') {
         return this.obj.value.indexOf(v) >= 0
       }
     }
@@ -140,7 +144,7 @@ export default {
     // 当前控件的配置
     obj: {
       type: Object,
-      default () {
+      default() {
         return {};
       }
     },
@@ -152,7 +156,7 @@ export default {
     // 整个表单的数据
     data: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
@@ -166,13 +170,13 @@ export default {
     // 当前被clone控件列表
     sortableItem: {
       type: Array,
-      default () {
+      default() {
         return [];
       }
     },
     nameList: {
       type: Array,
-      default () {
+      default() {
         return [];
       }
     },

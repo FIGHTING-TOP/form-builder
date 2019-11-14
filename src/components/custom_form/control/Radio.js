@@ -13,7 +13,7 @@ export default (_self, h) => {
       }
     }));
     v.label_content.map((it) => {
-      options.push(formOptions(it,h))
+      options.push(formOptions(it, h))
     })
   });
   return [

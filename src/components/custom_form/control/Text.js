@@ -11,7 +11,7 @@ export default (_self, h) => {
         rows: _self.obj.maxRows || 5
       },
       on: {
-        "on-change" (event) {
+        "on-change"(event) {
           if (!_self.obj.name) {
             return false;
           }
@@ -37,7 +37,7 @@ export let textConf = {
   maxLength: 200,
   // 是否必填
   require: true,
-  // 文本域行高 
+  // 文本域行高
   maxRows: 5,
   // 绑定的值
   value: "",

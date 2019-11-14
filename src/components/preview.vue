@@ -12,53 +12,53 @@
   </Form>
 </template>
 <script>
-    export default {
-        data() {
-            return {
-                template_form: [],
-                nameList: [],
-                formData: {},
-                submitObj: {}
-            }
-        },
-        methods: {
-            // 控件回填数据
-            handleChangeVal(val, element) {
-                this.$set(this.formData, element.obj.name, val);
-                // this.formData[element.obj.name] = val;
-            },
-            handleSubmit(name) {
-                this.$refs[name].validate((valid) => {
-                  if (valid) {
-                    // window.sessionStorage.setItem('template_form', JSON.stringify(this.template_form));
-                    // this.$Message.success('Success!');
-                    // this.$router.push('/preview');
-                  } else {
-                    this.$Message.error('Fail!');
-                  }
-                })
+  export default {
+    data() {
+      return {
+        template_form: [],
+        nameList: [],
+        formData: {},
+        submitObj: {}
+      }
+    },
+    methods: {
+      // 控件回填数据
+      handleChangeVal(val, element) {
+        this.$set(this.formData, element.obj.name, val);
+        // this.formData[element.obj.name] = val;
+      },
+      handleSubmit(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            // window.sessionStorage.setItem('template_form', JSON.stringify(this.template_form));
+            // this.$Message.success('Success!');
+            // this.$router.push('/preview');
+          } else {
+            this.$Message.error('Fail!');
+          }
+        })
 
-                // this.$post(`/hxk-biz/rest/template/saveTemplateHtml/${this.$route.params.tableName}`,this.submitObj).then(d => {
-                //     this.$Message.success('Success!');
-                //     this.$router.go(-1);
-                // });
-            },
-            // 更改当前渲染字段是否显示
-            // changeVisibility(index, visibility) {
-            //     this.$set(this.template_form[index].obj, 'visibility', visibility);
-            // }
-        },
-        created() {
-            this.$post(`/hxk-biz/rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
-                this.nameList = d;
-            });
-            this.template_form = JSON.parse(sessionStorage.getItem('template_form') || '[]');
-            for (let i in this.template_form) {
-                this.submitObj[this.template_form[i].obj.name] = Object.assign({}, this.template_form[i], {index: i});
-                this.$set(this.formData, this.template_form[i].obj.name, this.template_form[i].obj.value);
-            }
-        }
+        // this.$post(`/hxk-biz/rest/template/saveTemplateHtml/${this.$route.params.tableName}`,this.submitObj).then(d => {
+        //     this.$Message.success('Success!');
+        //     this.$router.go(-1);
+        // });
+      },
+      // 更改当前渲染字段是否显示
+      // changeVisibility(index, visibility) {
+      //     this.$set(this.template_form[index].obj, 'visibility', visibility);
+      // }
+    },
+    created() {
+      this.$post(`/hxk-biz/rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
+        this.nameList = d;
+      });
+      this.template_form = JSON.parse(sessionStorage.getItem('template_form') || '[]');
+      for (let i in this.template_form) {
+        this.submitObj[this.template_form[i].obj.name] = Object.assign({}, this.template_form[i], {index: i});
+        this.$set(this.formData, this.template_form[i].obj.name, this.template_form[i].obj.value);
+      }
     }
+  }
 
 </script>
 <style>

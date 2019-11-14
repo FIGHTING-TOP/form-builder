@@ -13,7 +13,7 @@ const router = new Router({
       path: '/',
       name: 'index',
       component: index,
-      meta:{
+      meta: {
         title: '管理表'
       }
     },
@@ -21,7 +21,7 @@ const router = new Router({
       path: '/editTable/:tableName/:addNew?',
       name: 'editTable',
       component: editTable,
-      meta:{
+      meta: {
         title: '编辑表单'
       }
     },
@@ -29,7 +29,7 @@ const router = new Router({
       path: '/render/:tableName',
       name: 'render',
       component: render,
-      meta:{
+      meta: {
         title: '填写表单'
       }
     },
@@ -37,7 +37,7 @@ const router = new Router({
       path: '/preview/:tableName',
       name: 'preview',
       component: preview,
-      meta:{
+      meta: {
         title: '预览表单'
       }
     },
@@ -45,7 +45,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.title) document.title = to.meta.title;
+  if (to.meta.title) document.title = to.meta.title;
   next()
 });
 

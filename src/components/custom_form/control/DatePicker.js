@@ -1,4 +1,5 @@
 import moment from 'moment';
+
 export default (_self, h) => {
   return [
     h('DatePicker', {
@@ -9,7 +10,7 @@ export default (_self, h) => {
         value: _self.obj.value
       },
       on: {
-        "on-change" (arr) {
+        "on-change"(arr) {
           if (!_self.obj.name) {
             return false;
           }

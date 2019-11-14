@@ -56,21 +56,21 @@ export default (_self, h, isEdit) => {
           )
         }
         return (v
-          ? h('span',{},v)
+          ? h('span', {}, v)
           : h('div', {class: 'tableInputItem'},
-          [
-            h('input', {
-              attrs: {'data-index': i},
-              domProps: {
-                type: 'text',
-                value: v,
-                oninput(e) {
-                  _self.obj.tableContent[x][y][e.target.dataset.index] = e.target.value;
+            [
+              h('input', {
+                attrs: {'data-index': i},
+                domProps: {
+                  type: 'text',
+                  value: v,
+                  oninput(e) {
+                    _self.obj.tableContent[x][y][e.target.dataset.index] = e.target.value;
+                  }
                 }
-              }
-            }),
-          ]
-        ))
+              }),
+            ]
+          ))
       };
       _self.obj.tableContent[x][y].map((v, i) => {
         sTd.push(tableInputItem(v, i))

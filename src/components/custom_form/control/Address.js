@@ -1,4 +1,5 @@
 import area from '../config/area'
+
 export default (_self, h) => {
   let control = [
     h('Cascader', {
@@ -18,7 +19,7 @@ export default (_self, h) => {
         // trigger: "hover"
       },
       on: {
-        "on-change" (arr,a) {
+        "on-change"(arr, a) {
           if (!_self.obj.name) {
             return false;
           }
@@ -41,7 +42,7 @@ export default (_self, h) => {
         'min-width': '300px'
       },
       on: {
-        "on-change": function(val) {
+        "on-change": function (val) {
           if (!_self.obj.name) {
             return false;
           }

@@ -10,25 +10,15 @@
                 <Icon type="ios-keypad"></Icon>
                 管理表
               </MenuItem>
-<!--              <MenuItem name="2" v-if="$route.name!='editTable'">-->
-<!--                <Icon type="ios-navigate"></Icon>-->
-<!--                新增表-->
-<!--              </MenuItem>-->
             </div>
           </Menu>
         </Header>
         <Content :style="{padding: '0'}">
-<!--          <Breadcrumb :style="{margin: '20px 0'}">-->
-<!--            <BreadcrumbItem>Home</BreadcrumbItem>-->
-<!--            <BreadcrumbItem>Components</BreadcrumbItem>-->
-<!--            <BreadcrumbItem>Layout</BreadcrumbItem>-->
-<!--          </Breadcrumb>-->
           <Card>
             <div style="min-height: 660px;">
               <router-view></router-view>
             </div>
           </Card>
-
         </Content>
         <Footer class="layout-footer-center">2019-2020 &copy; Healthinkang</Footer>
       </Layout>
@@ -36,19 +26,19 @@
   </div>
 </template>
 <script>
-    export default {
-        name: 'app',
-        methods: {
-            clickMenu(n) {
-                if (n == 1) {
-                    if (this.$route.name === 'index') {
-                        return false
-                    }
-                    this.$router.push({name: 'index'})
-                }
-            }
+  export default {
+    name: 'app',
+    methods: {
+      clickMenu(n) {
+        if (n == 1) {
+          if (this.$route.name === 'index') {
+            return false
+          }
+          this.$router.push({name: 'index'})
         }
+      }
     }
+  }
 </script>
 <style lang="scss">
   body {

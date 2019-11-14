@@ -129,12 +129,12 @@ export default {
       ]
     );
   },
-  methods:{
-    hasChecked(){
-      if(this.obj.type==='radio'){
+  methods: {
+    hasChecked() {
+      if (this.obj.type === 'radio') {
         return this.obj.value === this.ele.label_value
       }
-      return this.obj.value&&this.obj.value.indexOf(this.ele.label_value)>=0
+      return this.obj.value && this.obj.value.indexOf(this.ele.label_value) >= 0
     }
   },
   props: {

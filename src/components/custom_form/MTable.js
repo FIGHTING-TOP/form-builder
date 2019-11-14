@@ -13,7 +13,7 @@ export default {
               rowContent.push([''])
             }
             this.obj.tableContent[Object.keys(this.obj.tableContent).length] = rowContent;
-            this.obj.tableContent = Object.assign({},{},this.obj.tableContent)
+            this.obj.tableContent = Object.assign({}, {}, this.obj.tableContent)
           }
         }
       }, ['加一行']),
@@ -21,10 +21,10 @@ export default {
         domProps: {
           onclick: () => {
             let keys = Object.keys(this.obj.tableContent);
-            if(keys.length>1){
-              delete this.obj.tableContent[Math.max.apply(null,keys)];
-              this.obj.tableContent = Object.assign({},{},this.obj.tableContent)
-            }else{
+            if (keys.length > 1) {
+              delete this.obj.tableContent[Math.max.apply(null, keys)];
+              this.obj.tableContent = Object.assign({}, {}, this.obj.tableContent)
+            } else {
               this.$Modal.warning({
                 title: '注意',
                 content: '最少一行'
@@ -46,11 +46,11 @@ export default {
       h('button', {
         domProps: {
           onclick: () => {
-            if(this.obj.tableContent[0].length>1){
+            if (this.obj.tableContent[0].length > 1) {
               for (let x in this.obj.tableContent) {
                 this.obj.tableContent[x].pop()
               }
-            }else{
+            } else {
               this.$Modal.warning({
                 title: '注意',
                 content: '最少一列'
@@ -63,7 +63,7 @@ export default {
     return h(
       'div',
       {class: 'tableWrap'},
-      buttonGroup.concat(table(this,h,1))
+      buttonGroup.concat(table(this, h, 1))
     )
   },
   methods: {},

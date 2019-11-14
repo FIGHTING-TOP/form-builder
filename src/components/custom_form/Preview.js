@@ -68,7 +68,8 @@ const getObjValue = (ele, obj) => {
   const value = obj.value;
   if (ele == "select" || ele == "radio") {
     return (getSelectValue(value, items)[0] || {})
-      .label_name;;
+      .label_name;
+    ;
   }
 
   if (ele == "checkbox") {
@@ -91,13 +92,13 @@ export default {
     if (!this.obj.visibility) {
       return h('span');
     }
-    // 非 Title Hr P 
+    // 非 Title Hr P
     if (['title', 'hr', 'p'].indexOf(this.ele.toLowerCase()) < 0) {
       let control;
       if (this.ele.toLowerCase() != "uploads") {
         control = h('span', getObjValue(this.ele.toLowerCase(), this.obj));
       } else {
-        control = h('ul', { class: { 'pull-left': true }, style: { 'list-style': 'none' } },
+        control = h('ul', {class: {'pull-left': true}, style: {'list-style': 'none'}},
           this.obj.value.map(v => {
             return h('li', [h('a', {
               attrs: {
@@ -120,7 +121,12 @@ export default {
           'margin-bottom': '24px'
         }
       }, [
-        h('label', { class: { 'text-right': true, 'pull-left': this.ele.toLowerCase() == "uploads" } }, this.obj.label + "："),
+        h('label', {
+          class: {
+            'text-right': true,
+            'pull-left': this.ele.toLowerCase() == "uploads"
+          }
+        }, this.obj.label + "："),
         control,
       ])
     } else {
@@ -138,7 +144,7 @@ export default {
     // 当前控件的配置
     obj: {
       type: Object,
-      default () {
+      default() {
         return {};
       }
     },

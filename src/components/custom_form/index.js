@@ -10,7 +10,7 @@ const customForm = {
   options
 };
 
-const install = function(Vue, opts = {}) {
+const install = function (Vue, opts = {}) {
   Vue.component(render.name, render);
   Vue.component(uploadCustom.name, uploadCustom);
   Vue.component(options.name, options);
@@ -21,4 +21,4 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue);
 }
 
-export default Object.assign(customForm, { install });
+export default Object.assign(customForm, {install});
