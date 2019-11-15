@@ -72,6 +72,7 @@
             <FormItem label="数据字典：" v-if="showOptions(1)">
               <options v-for="(element,index) in modalFormData.items" :key="index"
                        :index="index" :obj="modalFormData || {}" :ele="element"
+                       @switchModal="switchModal"
                        :data="formData" @handleChangeVal="val => handleChangeVal(val,element)">
               </options>
             </FormItem>
@@ -148,6 +149,28 @@
             <Button type="primary" @click="handleOk">确定</Button>
           </div>
         </Modal>
+        <Modal v-model="commentsConfigModal"
+               width="50%"
+               :title="'配置备注的校验'"
+               :mask-closable="false">
+          <Form class="form_content" :label-width="80" :model="commentsVerificationData">
+            <FormItem label="校验规则：">
+              <Select v-model="commentsVerificationData.myRule">
+                <Option v-for="(key,item,index) in commentsVerificationData.rules" :value="item.rule" :key="index">{{
+                  item.name }}
+                </Option>
+              </Select>
+            </FormItem>
+            <FormItem label="最大长度：">
+              <InputNumber v-model="commentsVerificationData.maxLength" placeholder="请输入文本限制最大长度">
+              </InputNumber>
+            </FormItem>
+          </Form>
+          <div slot="footer">
+            <Button type="text" @click="switchModal">取消</Button>
+            <Button type="primary" @click="modal2Ok">确定</Button>
+          </div>
+        </Modal>
       </i-row>
     </div>
   </div>
@@ -169,8 +192,12 @@
         sortable_items: [],
         showModal1: false,
         showModal: false,
+        commentsConfigModal: false,
+        commentsIndex: {itemIndex: 0, optionIndex: 0},
         // 深拷贝对象，防止默认空对象被更改
         modalFormData: {},
+        // 单选和多选选项中的备注检验配置
+        commentsVerificationData: {},
         formData: {},
       };
     },
@@ -183,6 +210,10 @@
       });
     },
     methods: {
+      switchModal(o) {
+        if (o) this.commentsIndex = o;
+        this.commentsConfigModal = !this.commentsConfigModal
+      },
       customizedName(i) {
         let newName = prompt('自定义字段名称');
         if (newName != null) {
@@ -235,6 +266,7 @@
           });
           return false;
         }
+        return true
       },
       showOptions(i) {
         let type = this.modalFormData.type;
@@ -245,15 +277,17 @@
         }
       },
       handlePreview() {
-        this.validateForm();
-        sessionStorage.setItem('template_form', JSON.stringify(this.sortable_items));
-        this.$router.push({path: `/preview/${this.tableName}`});
+        if (this.validateForm()) {
+          sessionStorage.setItem('template_form', JSON.stringify(this.sortable_items));
+          this.$router.push({path: `/preview/${this.tableName}`});
+        }
       },
       handleSubmit() {
-        this.validateForm();
-        this.$post(`/hxk-biz/rest/template/saveTemplateHtml/${this.tableName}`, this.submitObj).then(d => {
-          this.$Message.success('Success!');
-        });
+        if (this.validateForm()) {
+          this.$post(`/hxk-biz/rest/template/saveTemplateHtml/${this.tableName}`, this.submitObj).then(d => {
+            this.$Message.success('Success!');
+          });
+        }
       },
       // 清空克隆表单
       handleReset() {
@@ -298,6 +332,19 @@
         // 深拷贝对象，防止默认空对象被更改
         return JSON.parse(JSON.stringify(original));
       },
+      modal2Ok() {
+        if (this.commentsVerificationData.myRule && this.commentsVerificationData.maxLength > 0) {
+          let x1 = this.commentsIndex['itemIndex'];
+          let x2 = this.commentsIndex['optionIndex'];
+          this.modalFormData.items[x1]['label_content'][x2] = Object.assign({}, this.modalFormData.items[x1]['label_content'][x2], this.commentsVerificationData)
+        } else {
+          this.$Modal.error({
+            title: '错误',
+            content: '填写不完整'
+          });
+          return false
+        }
+      },
       // modal点击确定执行事件
       handleOk() {
         const index = this.modalFormData.listIndex;
@@ -325,8 +372,8 @@
           }
         }
         // title、p的验证
-        if(!this.showOptions(0)){
-          if(this.modalFormData.label.trim()===''){
+        if (!this.showOptions(0)) {
+          if (this.modalFormData.label.trim() === '') {
             this.$Modal.error({
               title: '错误',
               content: '内容不能为空'

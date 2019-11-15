@@ -74,6 +74,15 @@ export default {
     ];
     this.ele.label_content.map((it, i) => {
       checkGroupItem.push(formOptions(it, h, 1));
+      if(it.type==='comments'){
+        checkGroupItem.push(h('button', {
+          domProps: {
+            onclick: () => {
+              this.$emit('switchModal',{itemIndex:this.index, optionIndex:i})
+            }
+          }
+        }, ['设置校验']))
+      }
       checkGroupItem.push(h('button', {
         domProps: {
           onclick: () => {

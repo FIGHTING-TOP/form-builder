@@ -1,3 +1,5 @@
+import {inputConf} from '../control/Input'
+
 export default [
   {
     "label_value": "1",
@@ -78,6 +80,9 @@ export const optionsItemTypes = {
   comments: {
     type: 'comments',
     value: '',
+    maxLength: 10,
+    rules: inputConf.rules,
+    myRule: 'noLimit',
     placeholder: '备注'
   },
   date: {
