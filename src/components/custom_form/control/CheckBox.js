@@ -7,14 +7,14 @@ export default (_self, h) => {
       domProps: {
         type: 'checkbox',
         checked: _self.hasChecked(v.label_value),
-        onclick: (e) => {
-          if (e.target.checked) {
+        onclick: () => {
+          if (!_self.hasChecked(v.label_value)) {
             // option根据mutexIndex互斥，mutexIndex从1开始
             if (_self.obj.hasMutex) {
-              if (_self.obj.mutexIndex - 1 === i) {
+              if(_self.obj.mutexIndex - 1 === i){
                 _self.obj.value = [v.label_value]
-              } else {
-                if (i >= 0) _self.obj.value.splice(i - 1, 1);
+              }else{
+                _self.obj.value.splice(_self.obj.value.indexOf(_self.obj.mutexIndex),1);
                 _self.obj.value.push(v.label_value)
               }
             } else {
