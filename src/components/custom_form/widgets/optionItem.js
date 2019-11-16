@@ -13,6 +13,28 @@ export default [
   }
 ]
 
+export const optionsItemTypes = {
+  property: {
+    type: 'property',
+    value: '',
+    placeholder: '选项内容'
+  },
+  comments: {
+    type: 'comments',
+    value: '',
+    maxLength: 10,
+    rules: inputConf.rules,
+    myRule: 'noLimit',
+    placeholder: '备注'
+  },
+  date: {
+    type: 'date',
+    value: '',
+    format: "yyyy年MM月dd日",
+    placeholder: '请选择日期'
+  }
+};
+
 export const formOptions = (it, h, isEdit) => {
   const property = (it, h, isEdit) => {
     if (isEdit) {
@@ -69,28 +91,6 @@ export const formOptions = (it, h, isEdit) => {
     date
   };
   return handler[it.type](it, h, isEdit)
-};
-
-export const optionsItemTypes = {
-  property: {
-    type: 'property',
-    value: '',
-    placeholder: '选项内容'
-  },
-  comments: {
-    type: 'comments',
-    value: '',
-    maxLength: 10,
-    rules: inputConf.rules,
-    myRule: 'noLimit',
-    placeholder: '备注'
-  },
-  date: {
-    type: 'date',
-    value: '',
-    format: "yyyy年MM月dd日",
-    placeholder: '请选择日期'
-  }
 };
 
 // 为单个option 操作的按钮

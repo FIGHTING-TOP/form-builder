@@ -13,7 +13,7 @@ export default (_self, h) => {
           _self.obj.items.map((val, idx) => {
             if (idx !== i) {
               val.label_content.map((it) => {
-                if (it.type === 'comments') {
+                if (it.type === 'comments' || it.type === 'date') {
                   it.value = ''
                 }
               })

@@ -28,7 +28,7 @@ export default (_self, h) => {
           _self.obj.items.map(val => {
             if (_self.obj.value.indexOf(val.label_value) < 0) {
               val.label_content.map((it) => {
-                if (it.type === 'comments') {
+                if (it.type === 'comments' || it.type === 'date') {
                   it.value = ''
                 }
               })
