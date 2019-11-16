@@ -2,13 +2,23 @@ import optionsItem, {formOptions} from "../widgets/optionItem";
 
 export default (_self, h) => {
   let options = [];
-  _self.obj.items.map(v => {
+  _self.obj.items.map((v, i) => {
     options.push(h("input", {
       domProps: {
         type: 'radio',
         checked: _self.hasChecked(v.label_value),
         onclick: () => {
-          _self.obj.value = v.label_value
+          _self.obj.value = v.label_value;
+          // 清空未选的option备注内容
+          _self.obj.items.map((val, idx) => {
+            if (idx !== i) {
+              val.label_content.map((it) => {
+                if (it.type === 'comments') {
+                  it.value = ''
+                }
+              })
+            }
+          })
         }
       }
     }));

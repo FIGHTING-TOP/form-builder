@@ -11,10 +11,10 @@ export default (_self, h) => {
           if (!_self.hasChecked(v.label_value)) {
             // option根据mutexIndex互斥，mutexIndex从1开始
             if (_self.obj.hasMutex) {
-              if(_self.obj.mutexIndex - 1 === i){
+              if (_self.obj.mutexIndex - 1 === i) {
                 _self.obj.value = [v.label_value]
-              }else{
-                _self.obj.value.splice(_self.obj.value.indexOf(_self.obj.mutexIndex),1);
+              } else {
+                _self.obj.value.splice(_self.obj.value.indexOf(_self.obj.mutexIndex), 1);
                 _self.obj.value.push(v.label_value)
               }
             } else {
@@ -23,13 +23,25 @@ export default (_self, h) => {
           } else {
             _self.obj.value.splice(_self.obj.value.indexOf(v.label_value), 1)
           }
+
+          // 清空未选的option备注内容
+          _self.obj.items.map(val => {
+            if (_self.obj.value.indexOf(val.label_value) < 0) {
+              val.label_content.map((it) => {
+                if (it.type === 'comments') {
+                  it.value = ''
+                }
+              })
+            }
+          })
+
         }
       }
-    }))
+    }));
     v.label_content.map((it) => {
       options.push(formOptions(it, h))
     })
-  })
+  });
   return [
     h("div", {
       class: 'option'

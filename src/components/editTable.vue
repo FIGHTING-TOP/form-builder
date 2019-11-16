@@ -50,7 +50,7 @@
           </Form>
         </i-col>
         <Modal v-model="showModal"
-               width="75%"
+               width="100%"
                :title="'配置' + modalFormData.modalTitle + '属性'"
                :mask-closable="false">
           <Form class="form_content" :label-width="80" :model="modalFormData" ref="modalFormData">

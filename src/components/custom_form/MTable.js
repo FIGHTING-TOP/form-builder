@@ -45,14 +45,22 @@ export default {
         domProps: {
           onclick: () => {
             for (let x in this.obj.tableContent) {
-              this.obj.tableContent[x].push([{
-                type: 'input',
-                value: '',
-                maxLength: 10,
-                rules: inputConf.rules,
-                myRule: 'noLimit',
-                placeholder: '请输入'
-              }])
+              if(x==0){
+                this.obj.tableContent[x].push([{
+                  type: 'text',
+                  value: '',
+                  placeholder: '请输入'
+                }])
+              }else{
+                this.obj.tableContent[x].push([{
+                  type: 'input',
+                  value: '',
+                  maxLength: 10,
+                  rules: inputConf.rules,
+                  myRule: 'noLimit',
+                  placeholder: '请输入'
+                }])
+              }
             }
             // this.$set(this.obj, 'items', o);
           }
