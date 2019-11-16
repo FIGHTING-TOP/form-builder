@@ -2,7 +2,7 @@ import {inputConf} from '../control/Input'
 
 export default [
   {
-    "label_value": "1",
+    "label_value": 1,
     "label_content": [
       {
         type: 'property',

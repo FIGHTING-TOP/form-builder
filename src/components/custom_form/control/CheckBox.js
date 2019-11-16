@@ -14,7 +14,8 @@ export default (_self, h) => {
               if (_self.obj.mutexIndex - 1 === i) {
                 _self.obj.value = [v.label_value]
               } else {
-                _self.obj.value.splice(_self.obj.value.indexOf(_self.obj.mutexIndex), 1);
+                let idx = _self.obj.value.indexOf(_self.obj.items[_self.obj.mutexIndex-1].label_value);
+                if(idx>=0) _self.obj.value.splice(idx, 1);
                 _self.obj.value.push(v.label_value)
               }
             } else {
