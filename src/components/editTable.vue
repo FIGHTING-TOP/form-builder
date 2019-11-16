@@ -76,6 +76,9 @@
             <FormItem label="占位符：" v-if="typeof modalFormData.placeholder != 'undefined'">
               <i-input v-model="modalFormData.placeholder" placeholder="请输入placeholder"></i-input>
             </FormItem>
+            <FormItem label="单位：" v-if="typeof modalFormData.append != 'undefined'">
+              <i-input v-model="modalFormData.append" placeholder="请输入单位"></i-input>
+            </FormItem>
             <FormItem label="最大长度：" v-if="typeof modalFormData.maxLength != 'undefined'">
               <InputNumber v-model="modalFormData.maxLength" placeholder="请输入文本限制最大长度">
               </InputNumber>
