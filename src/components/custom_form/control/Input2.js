@@ -19,8 +19,7 @@ export default (_self, h) => {
         }
       }
     }),
-    h('span',{
-    },_self.obj.append)
+    h('span',{},_self.obj.append)
   ];
 };
 
