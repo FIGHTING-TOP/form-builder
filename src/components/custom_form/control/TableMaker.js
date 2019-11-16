@@ -1,5 +1,28 @@
 import {inputConf} from "./Input";
 
+const textItem = {
+  type: 'text',
+  value: '',
+  placeholder: '请输入'
+};
+
+const inputItem = {
+  type: 'input',
+  value: '',
+  maxLength: 10,
+  rules: inputConf.rules,
+  myRule: 'noLimit',
+  placeholder: '请输入'
+};
+
+const dateItem = {
+  type: 'date',
+  value: '',
+  format: "yyyy年MM月dd日",
+  placeholder: '请选择日期'
+};
+
+
 export default (_self, h, isEdit) => {
   let rows = [];
   for (let x in _self.obj.tableContent) {
@@ -12,27 +35,23 @@ export default (_self, h, isEdit) => {
             h('button', {
               domProps: {
                 onclick: () => {
-                  _self.obj.tableContent[x][y].push({
-                    type: 'input',
-                    value: '',
-                    maxLength: 10,
-                    rules: inputConf.rules,
-                    myRule: 'noLimit',
-                    placeholder: '请输入'
-                  });
+                  _self.obj.tableContent[x][y].push(textItem);
                   _self.obj.tableContent = Object.assign({}, {}, _self.obj.tableContent)
                 }
               }
-            }, ['添加']),
+            }, ['添加文本']),
             h('button', {
               domProps: {
                 onclick: () => {
-                  _self.obj.tableContent[x][y].push({
-                    type: 'date',
-                    value: '',
-                    format: "yyyy年MM月dd日",
-                    placeholder: '请选择日期'
-                  });
+                  _self.obj.tableContent[x][y].push(inputItem);
+                  _self.obj.tableContent = Object.assign({}, {}, _self.obj.tableContent)
+                }
+              }
+            }, ['加输入框']),
+            h('button', {
+              domProps: {
+                onclick: () => {
+                  _self.obj.tableContent[x][y].push(dateItem);
                   _self.obj.tableContent = Object.assign({}, {}, _self.obj.tableContent)
                 }
               }
@@ -75,27 +94,35 @@ export default (_self, h, isEdit) => {
                     }
                   }
                 }),
+                h('button', {
+                  domProps: {
+                    onclick: () => {
+                      _self.$emit('switchModal', {locationX: x, locationY: y, innerIndex: i})
+                    }
+                  }
+                }, ['设置校验'])
+              ].concat(buttonGroup)
+            )
+          } else if (v.type === "text") {
+            return h(
+              'div', {class: 'tableInputItem'},
+              [
+                h('input', {
+                  attrs: {'data-index': i},
+                  domProps: {
+                    type: 'text',
+                    value: v.value,
+                    oninput(e) {
+                      _self.obj.tableContent[x][y][e.target.dataset.index].value = e.target.value;
+                    }
+                  }
+                }),
               ].concat(buttonGroup)
             )
           }
-          return h('DatePicker', {
-            props: {
-              placeholder: v.placeholder,
-              type: (!v.format || v.format == 'yyyy年MM月dd日') ? 'date' : 'datetime',
-              format: v.format || 'yyyy年MM月dd日',
-              value: v.value
-            },
-            on: {
-              "on-change"(arr) {
-                v.value = arr;
-              }
-            }
-          })
-        }
-        if (v.type === 'input') {
-          return (v.value
-            ? h('span', {}, v.value)
-            : h('div', {class: 'tableInputItem'},
+        } else {
+          if (v.type === 'input') {
+            return h('div', {class: 'tableInputItem'},
               [
                 h('input', {
                   attrs: {'data-index': i},
@@ -108,7 +135,10 @@ export default (_self, h, isEdit) => {
                   }
                 }),
               ]
-            ))
+            )
+          } else if (v.type === 'text') {
+            return h('span', {}, v.value)
+          }
         }
         return h('DatePicker', {
           props: {
@@ -139,54 +169,13 @@ export default (_self, h, isEdit) => {
   ]
 }
 
+
 export const tableConf = {
   type: 'table',
   config: true,
   label: '表格',
   tableContent: {
-    0: [[{
-      type: 'input',
-      value: '',
-      maxLength: 10,
-      rules: inputConf.rules,
-      myRule: 'noLimit',
-      placeholder: '请输入'
-    }], [{
-      type: 'input',
-      value: '',
-      maxLength: 10,
-      rules: inputConf.rules,
-      myRule: 'noLimit',
-      placeholder: '请输入'
-    }], [{
-      type: 'input',
-      value: '',
-      maxLength: 10,
-      rules: inputConf.rules,
-      myRule: 'noLimit',
-      placeholder: '请输入'
-    }]],
-    1: [[{
-      type: 'input',
-      value: '',
-      maxLength: 10,
-      rules: inputConf.rules,
-      myRule: 'noLimit',
-      placeholder: '请输入'
-    }], [{
-      type: 'input',
-      value: '',
-      maxLength: 10,
-      rules: inputConf.rules,
-      myRule: 'noLimit',
-      placeholder: '请输入'
-    }], [{
-      type: 'input',
-      value: '',
-      maxLength: 10,
-      rules: inputConf.rules,
-      myRule: 'noLimit',
-      placeholder: '请输入'
-    }]]
+    0: [[textItem], [textItem], [textItem]],
+    1: [[inputItem], [inputItem], [inputItem]]
   }
 };

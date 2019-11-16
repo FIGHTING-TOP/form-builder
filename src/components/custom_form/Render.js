@@ -31,26 +31,6 @@ const form_item = {
   table,
 };
 
-// const displayControl = (_self, sortableItem, name, value) => {
-//   // 默认不显示
-//   let display = false;
-//   for (let i in sortableItem) {
-//     // 循环出sortableItem内被关联字段并且其状态为显示并且其值与用户预设被关联字段值匹配
-//     // 不匹配,进行下一次判断
-//     if (sortableItem[i].obj.name != name || !sortableItem[i].obj.visibility) {
-//       continue;
-//     }
-//     // checkbox的value为数组, 判断是否存在  非数组直接比对字符串
-//     if ((Array.isArray(sortableItem[i].obj.value) && sortableItem[i].obj.value.indexOf(value) >= 0) ||
-//       sortableItem[i].obj.value == value) {
-//       display = true;
-//       // name唯一,已匹配则不必循环之后数据
-//       break;
-//     }
-//   }
-//   return display;
-// }
-
 export default {
   name: 'renders',
   render(h) {
@@ -65,27 +45,14 @@ export default {
     const validate = !!this.obj.name && !!this.obj.require;
     // 非 Title Hr P 需要FormItem
     if (['title', 'hr', 'p'].indexOf((this.ele.toLowerCase())) < 0) {
-      // 关联的组件判断是否展示
-      // if (this.obj.relation && !displayControl(this, this.sortableItem, this.obj.relation_name, this.obj.relation_value)) {
-      //   // 隐藏该控件并设置该控件标记为隐藏
-      //   this.$emit('changeVisibility', this.index, false);
-      //   return h("span");
-      // }
-      // 设置该控件标记为显示
-      // this.$emit('changeVisibility', this.index, true);
+
       let FormItem = {
         class: {
           'items': true,
           'sortable-items-required': validate
         },
         props: {
-          label: this.nameList.length > 0 && this.obj.name && (this.nameList.filter(v => {
-            return v.fieldName === this.obj.name
-          })[0])
-            ? (this.nameList.filter(v => {
-            return v.fieldName === this.obj.name
-          })[0])['fieldDesc'] + '：'
-            : (this.obj.label || this.ele) + '：',
+          label: (this.obj.label || this.ele) + '：',
           // 指定验证name
           prop: this.obj.name || 'temp',
           // 验证规则
@@ -169,12 +136,6 @@ export default {
     value: [String, Number, Array],
     // 当前被clone控件列表
     sortableItem: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
-    nameList: {
       type: Array,
       default() {
         return [];

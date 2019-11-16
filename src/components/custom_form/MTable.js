@@ -1,4 +1,5 @@
 import table from "./control/TableMaker";
+import {inputConf} from "./control/Input";
 
 export default {
   name: 'myTable',
@@ -10,7 +11,14 @@ export default {
           onclick: () => {
             let rowContent = [];
             for (let y in this.obj.tableContent[0]) {
-              rowContent.push([''])
+              rowContent.push([{
+                type: 'input',
+                value: '',
+                maxLength: 10,
+                rules: inputConf.rules,
+                myRule: 'noLimit',
+                placeholder: '请输入'
+              }])
             }
             this.obj.tableContent[Object.keys(this.obj.tableContent).length] = rowContent;
             this.obj.tableContent = Object.assign({}, {}, this.obj.tableContent)
@@ -37,7 +45,14 @@ export default {
         domProps: {
           onclick: () => {
             for (let x in this.obj.tableContent) {
-              this.obj.tableContent[x].push([''])
+              this.obj.tableContent[x].push([{
+                type: 'input',
+                value: '',
+                maxLength: 10,
+                rules: inputConf.rules,
+                myRule: 'noLimit',
+                placeholder: '请输入'
+              }])
             }
             // this.$set(this.obj, 'items', o);
           }

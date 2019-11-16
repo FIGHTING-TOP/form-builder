@@ -35,7 +35,6 @@
             <draggable :list="sortable_items" :options="dragOptions2">
               <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
                 <renders @handleRemoveEle="removeEle" @handleConfEle="confEle"
-                         :nameList="nameList"
                          v-for="(element,index) in sortable_items" :key="index"
                          :index="index" :ele="element.ele" :obj="element.obj || {}"
                          :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
@@ -56,16 +55,14 @@
                :mask-closable="false">
           <Form class="form_content" :label-width="80" :model="modalFormData" ref="modalFormData">
             <FormItem label="字段名称：" v-if="showOptions(0)">
-              <Select v-model="modalFormData.name">
+              <Select v-model="modalFormData.name" @on-change="saveNameDesc">
                 <Option v-for="(item,index) in nameList" :value="item.fieldName" :key="index">
                   {{ item.fieldDesc }}
-                  <button v-if="modalFormData.name===item.fieldName"
-                          style="float:right;border:none;padding:5px 10px;margin-top: -7px;
-                  background: #1abc9c;color: white;" @click="customizedName(index)">自定义
-                  </button>
                 </Option>
               </Select>
+              <i-input v-model="modalFormData.label" placeholder="请输入字段名称"></i-input>
             </FormItem>
+            <!--            title,p内容-->
             <FormItem label="内容：" v-if="!showOptions(0)">
               <i-input v-model="modalFormData.label" placeholder="请输入内容"></i-input>
             </FormItem>
@@ -141,7 +138,7 @@
               <InputNumber :max="6" :min="1" v-model="modalFormData.level"></InputNumber>
             </FormItem>
             <FormItem label="表格：" v-if="modalFormData.type === 'table'">
-              <myTable :obj="modalFormData || {}" :data="formData"></myTable>
+              <myTable :obj="modalFormData || {}" :data="formData" @switchModal="switchModal"></myTable>
             </FormItem>
           </Form>
           <div slot="footer">
@@ -156,8 +153,8 @@
           <Form class="form_content" :label-width="80" :model="commentsVerificationData">
             <FormItem label="校验规则：">
               <Select v-model="commentsVerificationData.myRule">
-                <Option v-for="(key,item,index) in commentsVerificationData.rules" :value="item.rule" :key="index">{{
-                  item.name }}
+                <Option v-for="(item,key,index) in commentsVerificationData.rules" :value="key" :key="index">
+                  {{ item.name }}
                 </Option>
               </Select>
             </FormItem>
@@ -193,7 +190,10 @@
         showModal1: false,
         showModal: false,
         commentsConfigModal: false,
-        commentsIndex: {itemIndex: 0, optionIndex: 0},
+        // 正则配置弹窗区分是哪一个的配置
+        whoseConfig: '',
+        // 正则配置的索引
+        commentsIndex: {},
         // 深拷贝对象，防止默认空对象被更改
         modalFormData: {},
         // 单选和多选选项中的备注检验配置
@@ -211,26 +211,25 @@
     },
     methods: {
       switchModal(o) {
-        if (o) this.commentsIndex = o;
+        if (o && o['itemIndex'] >= 0 && o['optionIndex'] >= 0) {
+          this.whoseConfig = 'option';
+          this.commentsIndex = o;
+          let x1 = o['itemIndex'];
+          let x2 = o['optionIndex'];
+          this.commentsVerificationData = this.modalFormData.items[x1]['label_content'][x2]
+        } else if (o && o['locationX'] >= 0 && o['locationY'] >= 0) {
+          this.whoseConfig = 'table';
+          this.commentsIndex = o;
+          this.commentsVerificationData = this.modalFormData.tableContent[o['locationX']][o['locationY']][o['innerIndex']]
+        }
         this.commentsConfigModal = !this.commentsConfigModal
       },
-      customizedName(i) {
-        let newName = prompt('自定义字段名称');
-        if (newName != null) {
-          if (newName.match(/[a-zA-Z\u4e00-\u9fa5]/g)) {
-            this.nameList[i]['fieldDesc'] = newName;
-            let s = this.modalFormData.name;
-            this.modalFormData.name = null;
-            this.$nextTick(() => {
-              this.modalFormData.name = s
-            })
-          } else {
-            this.$Modal.error({
-              title: '失败',
-              content: '字段名称含有非法字符'
-            });
+      saveNameDesc(v) {
+        this.nameList.map((val) => {
+          if (val.fieldName === v) {
+            this.modalFormData.label = val.fieldDesc
           }
-        }
+        })
       },
       validateForm() {
         let arr = [];
@@ -334,9 +333,17 @@
       },
       modal2Ok() {
         if (this.commentsVerificationData.myRule && this.commentsVerificationData.maxLength > 0) {
-          let x1 = this.commentsIndex['itemIndex'];
-          let x2 = this.commentsIndex['optionIndex'];
-          this.modalFormData.items[x1]['label_content'][x2] = Object.assign({}, this.modalFormData.items[x1]['label_content'][x2], this.commentsVerificationData)
+          if (this.whoseConfig === 'option') {
+            let x1 = this.commentsIndex['itemIndex'];
+            let x2 = this.commentsIndex['optionIndex'];
+            this.modalFormData.items[x1]['label_content'][x2] = this.commentsVerificationData
+          } else if (this.whoseConfig === 'table') {
+            let x = this.commentsIndex['locationX'];
+            let y = this.commentsIndex['locationY'];
+            let i = this.commentsIndex['innerIndex'];
+            this.modalFormData.tableContent[x][y][i] = this.commentsVerificationData
+          }
+          this.switchModal()
         } else {
           this.$Modal.error({
             title: '错误',
@@ -386,6 +393,14 @@
           this.$Modal.error({
             title: '错误',
             content: '互斥索引不正确'
+          });
+          return false;
+        }
+        // 验证字段名称
+        if (!this.modalFormData.label.match(/[a-zA-Z\u4e00-\u9fa5]/g)) {
+          this.$Modal.error({
+            title: '失败',
+            content: '字段名称含有非法字符'
           });
           return false;
         }
