@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import editTable from '@/components/editTable'
+import editForm from '@/components/editForm'
 import render from '@/components/render'
 import preview from '@/components/preview'
 import index from '@/components/index'
@@ -18,9 +18,9 @@ const router = new Router({
       }
     },
     {
-      path: '/editTable/:tableName/:addNew?',
-      name: 'editTable',
-      component: editTable,
+      path: '/editForm/:tableName/:addNew?',
+      name: 'editForm',
+      component: editForm,
       meta: {
         title: '编辑表单'
       }

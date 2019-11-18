@@ -73,6 +73,9 @@
                        :data="formData" @handleChangeVal="val => handleChangeVal(val,element)">
               </options>
             </FormItem>
+            <FormItem label="每个选项独占一行：" v-if="showOptions(1)">
+              <Checkbox v-model="modalFormData.bigOption">是</Checkbox>
+            </FormItem>
             <FormItem label="占位符：" v-if="typeof modalFormData.placeholder != 'undefined'">
               <i-input v-model="modalFormData.placeholder" placeholder="请输入placeholder"></i-input>
             </FormItem>
@@ -275,7 +278,7 @@
         if (i === 0) {
           return !(type === 'title' || type === 'hr' || type === 'p')
         } else {
-          return type === 'select' || type === 'radio' || type === 'checkbox'
+          return type === 'radio' || type === 'checkbox'
         }
       },
       handlePreview() {
@@ -303,7 +306,7 @@
       },
       // modal内数据字典选项发生改变触发事件
       handleTableNameChange(val) {
-        this.$router.replace({path: `/editTable/${val}`});
+        this.$router.replace({path: `/editForm/${val}`});
         this.tableNameChange(val)
       },
       tableNameChange(val) {

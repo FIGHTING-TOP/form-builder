@@ -4,7 +4,7 @@
       <strong>{{ row.index }}</strong>
     </template>
     <template slot-scope="{ row, index }" slot="action">
-      <Button type="primary" size="small" style="margin-right: 5px" @click="editTable(index)">编辑</Button>
+      <Button type="primary" size="small" style="margin-right: 5px" @click="editForm(index)">编辑</Button>
       <!--      <Button type="error" size="small" @click="remove(index)">删除</Button>-->
     </template>
   </Table>
@@ -52,8 +52,8 @@
       });
     },
     methods: {
-      editTable(i) {
-        this.$router.push({path: `/editTable/${this.tableList[i].tableName}`})
+      editForm(i) {
+        this.$router.push({path: `/editForm/${this.tableList[i].tableName}`})
       },
       remove(i) {
         this.$Modal.confirm({

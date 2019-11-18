@@ -59,5 +59,7 @@ export let radioConf = {
   // 关联字段value
   relation_value: '',
   // 是否被渲染
-  visibility: true
+  visibility: true,
+  // 每个选项独占一行
+  bigOption: false
 }

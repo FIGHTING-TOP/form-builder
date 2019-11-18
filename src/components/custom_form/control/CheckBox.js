@@ -78,5 +78,7 @@ export let checkBoxConf = {
   // 是否被渲染
   visibility: true,
   // 是否含有互斥
-  hasMutex: false
+  hasMutex: false,
+  // 每个选项独占一行
+  bigOption: false
 }
