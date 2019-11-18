@@ -13,7 +13,7 @@ export default (_self, h) => {
       props: {
         placeholder: _self.obj.placeholder || (_self.obj.name ? "" : "请选择详细地址"),
         data: area,
-        value: _self.obj.value || [],
+        value: _self.obj.value.__value || [],
         filterable: false,
         'change-on-select': true,
         // trigger: "hover"
@@ -23,34 +23,38 @@ export default (_self, h) => {
           if (!_self.obj.name) {
             return false;
           }
-          _self.obj.value = a;
-          _self.$emit('handleChangeVal', a);
+          console.log(arr)
+          console.log(a)
+          let __label = '';
+          a.map((v, i) => {
+            if (i === a.length - 1) {
+              __label += v.label
+            } else {
+              __label += v.label + ' / '
+            }
+          });
+          _self.obj.value = {
+            __value: arr,
+            __label
+          };
+          _self.$emit('handleChangeVal', _self.obj.value);
         }
       }
     }),
-    h("Input", {
-      props: {
+    h('input', {
+      class: 'details_address',
+      domProps: {
         placeholder: _self.obj.placeholder || "请输入详细地址",
-        ref: 'details_address',
-        value: (_self.obj.value[3] || {})
-          .name
+        value: _self.obj.value['details_address'],
+        oninput: (e) => {
+          _self.obj.value['details_address'] = e.target.value;
+          _self.$emit('handleChangeVal', _self.obj.value)
+        }
       },
       style: {
         width: 'auto',
-        display: !_self.obj.name ? 'none' : 'inline-block',
-        'margin-left': '5px',
-        'min-width': '300px'
+        display: 'inline-block', 'margin-left': '5px', 'min-width': '300px'
       },
-      on: {
-        "on-change": function (val) {
-          if (!_self.obj.name) {
-            return false;
-          }
-          let temp_data = _self.obj.value.slice(0, 3);
-          _self.obj.value = temp_data.concat(val.currentTarget.value);
-          _self.$emit('handleChangeVal', _self.obj.value)
-        }
-      }
     })
   ];
 
@@ -76,7 +80,7 @@ export let addressConf = {
   // 表单name
   name: '',
   // 绑定的值
-  value: [],
+  value: {},
   // 验证错误提示信息
   ruleError: '请选择并输入详细地址',
   // 是否关联字段
