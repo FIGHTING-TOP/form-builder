@@ -1,4 +1,3 @@
-import moment from 'moment';
 
 export default (_self, h) => {
   return [

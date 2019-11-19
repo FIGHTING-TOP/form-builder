@@ -1,4 +1,4 @@
-import {inputConf} from '../control/Input'
+import {rules} from '../inputRegExpRules'
 
 export default [
   {
@@ -23,7 +23,7 @@ export const optionsItemTypes = {
     type: 'comments',
     value: '',
     maxLength: 10,
-    rules: inputConf.rules,
+    rules,
     myRule: 'noLimit',
     placeholder: '备注'
   },

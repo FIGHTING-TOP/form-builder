@@ -83,6 +83,15 @@ export default {
           }
         }, ['设置校验']))
       }
+      if(it.type==='date'){
+        checkGroupItem.push(h('button', {
+          domProps: {
+            onclick: () => {
+              this.$emit('switchModal',{itemIndex:this.index, optionIndex:i})
+            }
+          }
+        }, ['设置占位符']))
+      }
       checkGroupItem.push(h('button', {
         domProps: {
           onclick: () => {

@@ -1,5 +1,5 @@
 import table from "./control/TableMaker";
-import {inputConf} from "./control/Input";
+import {rules} from './inputRegExpRules'
 
 export default {
   name: 'myTable',
@@ -15,7 +15,7 @@ export default {
                 type: 'input',
                 value: '',
                 maxLength: 10,
-                rules: inputConf.rules,
+                rules,
                 myRule: 'noLimit',
                 placeholder: '请输入'
               }])
@@ -56,7 +56,7 @@ export default {
                   type: 'input',
                   value: '',
                   maxLength: 10,
-                  rules: inputConf.rules,
+                  rules,
                   myRule: 'noLimit',
                   placeholder: '请输入'
                 }])

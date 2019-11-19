@@ -1,4 +1,4 @@
-import {inputConf} from "./Input";
+import {rules} from '../inputRegExpRules'
 
 const textItem = {
   type: 'text',
@@ -10,7 +10,7 @@ const inputItem = {
   type: 'input',
   value: '',
   maxLength: 10,
-  rules: inputConf.rules,
+  rules,
   myRule: 'noLimit',
   placeholder: '请输入'
 };

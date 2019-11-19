@@ -154,19 +154,23 @@
         </Modal>
         <Modal v-model="commentsConfigModal"
                width="50%"
-               :title="'配置备注的校验'"
+               :title="'配置项'"
                :mask-closable="false">
           <Form class="form_content" :label-width="80" :model="commentsVerificationData">
-            <FormItem label="校验规则：">
+            <FormItem label="校验规则：" v-if="commentsVerificationData.myRule">
               <Select v-model="commentsVerificationData.myRule">
                 <Option v-for="(item,key,index) in commentsVerificationData.rules" :value="key" :key="index">
                   {{ item.name }}
                 </Option>
               </Select>
             </FormItem>
-            <FormItem label="最大长度：">
+            <FormItem label="最大长度：" v-if="commentsVerificationData.maxLength">
               <InputNumber v-model="commentsVerificationData.maxLength" placeholder="请输入文本限制最大长度">
               </InputNumber>
+            </FormItem>
+            <FormItem label="占位符：">
+              <i-input v-model="commentsVerificationData.placeholder" placeholder="请输入文本框的占位符">
+              </i-input>
             </FormItem>
           </Form>
           <div slot="footer">
@@ -217,12 +221,14 @@
     },
     methods: {
       switchModal(o) {
+        // 选项的配置
         if (o && o['itemIndex'] >= 0 && o['optionIndex'] >= 0) {
           this.whoseConfig = 'option';
           this.commentsIndex = o;
           let x1 = o['itemIndex'];
           let x2 = o['optionIndex'];
           this.commentsVerificationData = this.modalFormData.items[x1]['label_content'][x2]
+          // 表格的配置
         } else if (o && o['locationX'] >= 0 && o['locationY'] >= 0) {
           this.whoseConfig = 'table';
           this.commentsIndex = o;
@@ -338,25 +344,25 @@
         return JSON.parse(JSON.stringify(original));
       },
       modal2Ok() {
-        if (this.commentsVerificationData.myRule && this.commentsVerificationData.maxLength > 0) {
-          if (this.whoseConfig === 'option') {
-            let x1 = this.commentsIndex['itemIndex'];
-            let x2 = this.commentsIndex['optionIndex'];
-            this.modalFormData.items[x1]['label_content'][x2] = this.commentsVerificationData
-          } else if (this.whoseConfig === 'table') {
-            let x = this.commentsIndex['locationX'];
-            let y = this.commentsIndex['locationY'];
-            let i = this.commentsIndex['innerIndex'];
-            this.modalFormData.tableContent[x][y][i] = this.commentsVerificationData
-          }
-          this.switchModal()
-        } else {
-          this.$Modal.error({
-            title: '错误',
-            content: '填写不完整'
-          });
-          return false
+        // if (this.commentsVerificationData.myRule && this.commentsVerificationData.maxLength > 0) {
+        if (this.whoseConfig === 'option') {
+          let x1 = this.commentsIndex['itemIndex'];
+          let x2 = this.commentsIndex['optionIndex'];
+          this.modalFormData.items[x1]['label_content'][x2] = this.commentsVerificationData
+        } else if (this.whoseConfig === 'table') {
+          let x = this.commentsIndex['locationX'];
+          let y = this.commentsIndex['locationY'];
+          let i = this.commentsIndex['innerIndex'];
+          this.modalFormData.tableContent[x][y][i] = this.commentsVerificationData
         }
+        this.switchModal()
+        // } else {
+        //   this.$Modal.error({
+        //     title: '错误',
+        //     content: '填写不完整'
+        //   });
+        //   return false
+        // }
       },
       // modal点击确定执行事件
       handleOk() {
