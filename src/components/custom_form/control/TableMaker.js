@@ -22,6 +22,21 @@ const dateItem = {
   placeholder: '请选择日期'
 };
 
+const selectItem = {
+  type: 'select',
+  value: '',
+  options: [
+    {
+      label_value: 1,
+      label_name: "选项1"
+    },
+    {
+      label_value: 2,
+      label_name: "选项2"
+    },
+  ]
+};
+
 
 export default (_self, h, isEdit) => {
   let rows = [];
@@ -56,6 +71,14 @@ export default (_self, h, isEdit) => {
                 }
               }
             }, ['添加时间']),
+            h('button', {
+              domProps: {
+                onclick: () => {
+                  _self.obj.tableContent[x][y].push(JSON.parse(JSON.stringify(selectItem)));
+                  _self.obj.tableContent = Object.assign({}, {}, _self.obj.tableContent)
+                }
+              }
+            }, ['添加选择器']),
             h('button', {
               attrs: {'data-index': i},
               domProps: {
@@ -119,6 +142,61 @@ export default (_self, h, isEdit) => {
                 }),
               ].concat(buttonGroup)
             )
+          } else if (v.type === 'date') {
+            return h(
+              'div', {class: 'tableInputItem'},
+              [
+                h('DatePicker', {
+                  props: {
+                    placeholder: v.placeholder,
+                    type: (!v.format || v.format == 'yyyy年MM月dd日') ? 'date' : 'datetime',
+                    format: v.format || 'yyyy年MM月dd日',
+                    value: v.value
+                  },
+                  on: {
+                    "on-change"(arr) {
+                      v.value = arr;
+                    }
+                  }
+                }),
+              ].concat(buttonGroup)
+            )
+          } else if (v.type === 'select') {
+            return h(
+              'div', {class: 'tableInputItem'},
+              [
+                h(
+                  "Select", {
+                    props: {
+                      placeholder: v.placeholder || "请选择",
+                      value: v.value || ''
+                    },
+                    on: {
+                      'on-change'(value) {
+                        v.value = value;
+                      }
+                    }
+                  },
+                  v.options.map(v => {
+                    return h(
+                      "Option", {
+                        props: {
+                          value: "" + v.label_value
+                        },
+                      },
+                      v.label_name
+                    );
+                  })
+                ),
+                h('button', {
+                  domProps: {
+                    onclick: () => {
+                      _self.$emit('switchModal', {locationX: x, locationY: y, innerIndex: i})
+                    }
+                  }
+                }, ['设置选项'])
+              ].concat(buttonGroup)
+            )
           }
         } else {
           if (v.type === 'input') {
@@ -138,21 +216,46 @@ export default (_self, h, isEdit) => {
             )
           } else if (v.type === 'text') {
             return h('span', {}, v.value)
+          } else if (v.type === 'date') {
+            return h('DatePicker', {
+              props: {
+                placeholder: v.placeholder,
+                type: (!v.format || v.format == 'yyyy年MM月dd日') ? 'date' : 'datetime',
+                format: v.format || 'yyyy年MM月dd日',
+                value: v.value
+              },
+              on: {
+                "on-change"(arr) {
+                  v.value = arr;
+                }
+              }
+            })
+          } else if (v.type === 'select') {
+            return h(
+              "Select", {
+                props: {
+                  placeholder: v.placeholder || "请选择",
+                  value: v.value || ''
+                },
+                on: {
+                  'on-change'(value) {
+                    v.value = value;
+                  }
+                }
+              },
+              v.options.map(v => {
+                return h(
+                  "Option", {
+                    props: {
+                      value: "" + v.label_value
+                    },
+                  },
+                  v.label_name
+                );
+              })
+            )
           }
         }
-        return h('DatePicker', {
-          props: {
-            placeholder: v.placeholder,
-            type: (!v.format || v.format == 'yyyy年MM月dd日') ? 'date' : 'datetime',
-            format: v.format || 'yyyy年MM月dd日',
-            value: v.value
-          },
-          on: {
-            "on-change"(arr) {
-              v.value = arr;
-            }
-          }
-        })
       };
       _self.obj.tableContent[x][y].map((v, i) => {
         sTd.push(tableInputItem(v, i))

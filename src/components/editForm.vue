@@ -168,9 +168,17 @@
               <InputNumber v-model="commentsVerificationData.maxLength" placeholder="请输入文本限制最大长度">
               </InputNumber>
             </FormItem>
-            <FormItem label="占位符：">
+            <FormItem label="占位符：" v-if="commentsVerificationData.placeholder">
               <i-input v-model="commentsVerificationData.placeholder" placeholder="请输入文本框的占位符">
               </i-input>
+            </FormItem>
+            <FormItem label="选项内容：" v-if="commentsVerificationData.options">
+              <i-input v-model="commentsVerificationData.options[index].label_name"
+                       v-for="(item,index) in commentsVerificationData.options"
+                       placeholder="选项内容" :key="index">
+              </i-input>
+              <Button @click="addSelectOption">添加</Button>
+              <Button @click="removeSelectOption">删除</Button>
             </FormItem>
           </Form>
           <div slot="footer">
@@ -220,6 +228,17 @@
       });
     },
     methods: {
+      addSelectOption(){
+        this.commentsVerificationData.options.push({
+          label_value: this.commentsVerificationData.options.length+1,
+          label_name: "选项"+(this.commentsVerificationData.options.length+1)
+        })
+      },
+      removeSelectOption(){
+        if(this.commentsVerificationData.options.length>1){
+          this.commentsVerificationData.options.pop()
+        }
+      },
       switchModal(o) {
         // 选项的配置
         if (o && o['itemIndex'] >= 0 && o['optionIndex'] >= 0) {
