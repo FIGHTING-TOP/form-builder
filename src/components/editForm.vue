@@ -173,10 +173,14 @@
               </i-input>
             </FormItem>
             <FormItem label="选项内容：" v-if="commentsVerificationData.options">
-              <i-input v-model="commentsVerificationData.options[index].label_name"
-                       v-for="(item,index) in commentsVerificationData.options"
-                       placeholder="选项内容" :key="index">
-              </i-input>
+              <div v-for="(item,index) in commentsVerificationData.options" :key="index">
+                <input class="label_value" type="text"
+                       v-model="commentsVerificationData.options[index].label_value"
+                       placeholder="选项的值" style="width: 60px;">
+                <i-input v-model="commentsVerificationData.options[index].label_name"
+                         placeholder="选项内容">
+                </i-input>
+              </div>
               <Button @click="addSelectOption">添加</Button>
               <Button @click="removeSelectOption">删除</Button>
             </FormItem>

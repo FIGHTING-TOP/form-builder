@@ -26,6 +26,7 @@ export const $post = async function (url, params = {}) {
         title: '错误',
         content: r.data.msg
       });
+      throw new Error()
     }
   } catch (e) {
     throw e;
