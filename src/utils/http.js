@@ -22,13 +22,13 @@ export const $post = async function (url, params = {}) {
     if (r.data && r.data.resultCode == 0) {
       return r.data.data
     } else {
-      this.$Modal.error({
-        title: '错误',
-        content: r.data.msg
-      });
-      throw new Error()
+      throw r.data;
     }
   } catch (e) {
+    this.$Modal.error({
+      title: '错误',
+      content: e.msg || '接口异常'
+    });
     throw e;
   }
 };
