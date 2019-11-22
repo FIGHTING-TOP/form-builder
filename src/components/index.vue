@@ -47,7 +47,7 @@
       }
     },
     created() {
-      this.$post(`/hxk-biz/rest/template/queryAllTables`).then(d => {
+      this.$post(`/hxk/rest/template/queryAllTables`).then(d => {
         this.tableList = d;
       });
     },
@@ -60,7 +60,7 @@
           title: '提示',
           content: '<p>确定要删除该条吗？</p>',
           onOk: () => {
-            this.$post(`/hxk-biz/rest/publicHealth/delCommon/${this.tableList[i].tableName}/{id}`).then(d => {
+            this.$post(`/hxk/rest/publicHealth/delCommon/${this.tableList[i].tableName}/{id}`).then(d => {
               this.tableList.splice(i, 1);
               this.$Message.info('Clicked ok');
             });
