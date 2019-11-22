@@ -227,7 +227,7 @@
       this.tableName = this.$route.params.tableName;
       this.tableNameChange(this.tableName);
       // /static/label.json
-      this.$post(`/hxk/rest/template/queryAllTables`).then(d => {
+      this.$post(`/rest/template/queryAllTables`).then(d => {
         this.tableList = d;
       });
     },
@@ -318,7 +318,7 @@
       },
       handleSubmit() {
         if (this.validateForm()) {
-          this.$post(`/hxk/rest/template/saveTemplateHtml/${this.tableName}`, this.submitObj).then(d => {
+          this.$post(`/rest/template/saveTemplateHtml/${this.tableName}`, this.submitObj).then(d => {
             this.$Message.success('Success!');
           });
         }
@@ -339,7 +339,7 @@
         this.tableNameChange(val)
       },
       tableNameChange(val) {
-        this.$post(`/hxk/rest/template/queryTemplateHtml/${val}`).then(d => {
+        this.$post(`/rest/template/queryTemplateHtml/${val}`).then(d => {
           let m = [];
           for (let x in d) {
             if (x) {
@@ -350,7 +350,7 @@
           this.sortable_items = m;
           this.showModal1 = false;
         });
-        this.$post(`/hxk/rest/template/queryAllFields/${val}`).then(d => {
+        this.$post(`/rest/template/queryAllFields/${val}`).then(d => {
           this.nameList = d;
         });
       },

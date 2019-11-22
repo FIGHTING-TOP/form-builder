@@ -5,7 +5,7 @@ module.exports = {
       // target: 'http://192.168.30.166:9081', // 接口域名
       changeOrigin: true, //是否跨域
       pathRewrite: {
-        '^/hxk': '/hxk-biz' //需要rewrite的,
+        '^/hxk': '/hxk' //需要rewrite的,
       }
     }
   }

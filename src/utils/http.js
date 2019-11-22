@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-// axios.defaults.baseURL = '/apis';
+// 测试环境打包
+axios.defaults.baseURL = '/hxk-biz';
+// 线上环境打包
+// axios.defaults.baseURL = '/hxk';
 
 export const $get = (url) => {
   return new Promise((resolve, reject) => {

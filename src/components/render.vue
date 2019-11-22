@@ -38,7 +38,7 @@
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.$post(`/hxk/rest/publichealth/saveOrUpdateUserInfo/${this.$route.params.tableName}`, this.submitObj).then(d => {
+            this.$post(`/rest/publichealth/saveOrUpdateUserInfo/${this.$route.params.tableName}`, this.submitObj).then(d => {
               this.$Message.success('Success!');
             });
           } else {
@@ -52,10 +52,10 @@
       // }
     },
     created() {
-      this.$post(`/hxk/rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
+      this.$post(`/rest/template/queryAllFields/${this.$route.params.tableName}`).then(d => {
         this.nameList = d;
       });
-      this.$post(`/hxk/rest/template/queryTemplateHtml/${this.$route.params.tableName}`).then(d => {
+      this.$post(`/rest/template/queryTemplateHtml/${this.$route.params.tableName}`).then(d => {
         let m = [];
         for (let x in d) {
           if (d[x] && d[x].index >= 0) {
