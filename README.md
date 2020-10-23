@@ -2,7 +2,7 @@
 
 > 新项目需要用到工作流设定 + 自定义表单控件，这里列出了自定义表单控件的代码实现,可实现自定义表单控件,可拖拽排序，自定义属性
 
-## TODO
+## TODO（有 ✔ 代表已完成）
 
 - 1、标题 是纯文本，不需要匹配数据库字段                                              ✔
 - 2、地址选择 应包括名称和编码                                                       ✔
@@ -20,7 +20,7 @@
 
 - table 的 输入框 支持 弹框选择                                                      ✔
 - radio、checkbox 文本框输入自动选中                                                 ✔
-- 键盘遮住页面，页面底部默认加一个键盘的高度
+- 键盘遮住页面，页面底部默认加一个键盘的高度                                           ✔
 
 
 
@@ -33,7 +33,7 @@ npm start
 
 ```
 
-### 文件目录
+## 文件目录
 
 ```
 .
@@ -88,12 +88,12 @@ npm start
     └── label.json
 ```
 
-相关插件：
+## 相关插件：
 - [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 - [Vue.js](https://vuejs.org/)
 - [iView](https://www.iviewui.com/docs/guide/install)
 
-### 更多参考
+## Reference
 - https://github.com/mrabit/vue-formbuilder
 - http://112.74.43.150/
 - http://dobtco.github.io/formbuilder/
