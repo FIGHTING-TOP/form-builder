@@ -21,9 +21,9 @@
             <Form :label-width="100" class="b-a">
               <draggable :clone="cloneData" :list="form_list" :options="dragOptions1">
                 <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
-                  <span class="label_item" :class="{odd:index%2===0}"
-                        v-for="(element,index) in form_list"
-                        :key="index">{{element.obj.label}}</span>
+                  <template v-for="(element,index) in form_list">
+                      <span class="label_item" :key="index" :class="{odd:index%2===0}">{{element.obj.label}}</span>
+                  </template>
                 </transition-group>
               </draggable>
             </Form>
@@ -34,12 +34,14 @@
             <!--          <Alert style="margin: 15px 15px 0;" type="warning" show-icon>未绑定数据字典控件无效</Alert>-->
             <draggable :list="sortable_items" :options="dragOptions2">
               <transition-group class="form-list-group" type="transition" :name="'flip-list'" tag="div">
-                <renders @handleRemoveEle="removeEle" @handleConfEle="confEle"
-                         v-for="(element,index) in sortable_items" :key="index"
-                         :index="index" :ele="element.ele" :obj="element.obj || {}"
-                         :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
-                         :sortableItem="sortable_items" :config-icon="true">
-                </renders>
+                <template v-for="(element,index) in sortable_items">
+                  <renders @handleRemoveEle="removeEle" @handleConfEle="confEle"
+                          :key="index"
+                          :index="index" :ele="element.ele" :obj="element.obj || {}"
+                          :data="formData" @handleChangeVal="val => handleChangeVal(val,element)"
+                          :sortableItem="sortable_items" :config-icon="true">
+                  </renders>
+                </template>
               </transition-group>
             </draggable>
             <FormItem>
